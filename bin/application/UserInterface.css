@@ -1,0 +1,82 @@
+/****************************************************************************
+*					Music Center UserInterface - Dark Theme
+*					
+* @author Rocky Robson
+* @version 2015-12-09
+*					
+*****************************************************************************/
+
+/***********************************************
+			Color Constant - Blue
+ ***********************************************/
+
+* {
+	blue-base: rgb(60,165,191);
+}
+
+
+/***********************************************
+					Theme
+ ***********************************************/
+
+.dark-theme {
+	-fx-background-color: rgb(49,49,49);
+}
+
+
+/***********************************************
+					Buttons
+ ***********************************************/
+
+.buttons {
+	-fx-background-color: transparent;
+}
+
+.playbar-buttons:hover {
+	-fx-effect: innershadow(three-pass-box, #ffffcc, 10, 0, 0, 0);
+}
+
+.directory-buttons:hover {
+	-fx-background-color: blue-base;
+}
+
+
+/***********************************************
+					List-View
+ ***********************************************/
+
+.list-cell {
+	-fx-background-color: transparent;
+	-fx-text-fill: white;
+}
+
+.list-cell:hover, .list-cell:focused {
+	-fx-background-color: blue-base;
+}
+
+
+/***********************************************
+					Scroll-Bar
+ ***********************************************/
+ 
+.scroll-bar {
+	-fx-background-color: transparent;
+}
+
+.scroll-bar .thumb {
+	-fx-background-color: blue-base;
+	-fx-background-radius: 0.0px;
+}
+
+.scroll-bar .increment-arrow, 
+.scroll-bar .decrement-arrow {
+	-fx-background-color: blue-base;
+}
+
+.scroll-bar .increment-arrow:hover, 
+.scroll-bar .increment-arrow:focused,
+.scroll-bar .decrement-arrow:hover,
+.scroll-bar .decrement-arrow:focused {
+	
+}
+

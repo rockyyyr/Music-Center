@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="600.0" prefWidth="1200.0" stylesheets="@UserInterface.css" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.InterfaceController">
+   <children>
+      <Pane layoutY="50.0" prefHeight="552.0" prefWidth="297.0" AnchorPane.bottomAnchor="-2.0" AnchorPane.leftAnchor="-2.0" AnchorPane.topAnchor="50.0">
+         <children>
+            <ListView fx:id="artistList" layoutY="80.0" prefHeight="462.0" prefWidth="297.0" styleClass="dark-theme">
+               <cursor>
+                  <Cursor fx:constant="DEFAULT" />
+               </cursor>
+               <padding>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </padding>
+            </ListView>
+            <Label contentDisplay="TOP" layoutX="14.0" prefHeight="75.0" prefWidth="278.0" text="artists" textFill="WHITE">
+               <font>
+                  <Font name="SansSerif Regular" size="65.0" />
+               </font>
+            </Label>
+            <Button fx:id="addLibraryButton" contentDisplay="TEXT_ONLY" graphicTextGap="1.0" layoutX="207.0" layoutY="38.0" mnemonicParsing="false" text="+ Library" textFill="WHITE">
+               <font>
+                  <Font name="Microsoft Sans Serif" size="16.0" />
+               </font>
+               <styleClass>
+                  <String fx:value="buttons" />
+                  <String fx:value="directory-buttons" />
+               </styleClass>
+            </Button>
+         </children>
+         <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </padding>
+      </Pane>
+      <Pane layoutX="800.0" layoutY="4.0" prefHeight="552.0" prefWidth="258.0" AnchorPane.bottomAnchor="-2.0" AnchorPane.rightAnchor="-2.0" AnchorPane.topAnchor="50.0">
+         <children>
+            <Label alignment="CENTER_RIGHT" layoutX="14.0" layoutY="7.0" text="playlist" textFill="WHITE">
+               <font>
+                  <Font name="SansSerif Regular" size="41.0" />
+               </font>
+            </Label>
+            <ListView layoutY="65.0" prefHeight="475.0" styleClass="dark-theme" />
+         </children>
+         <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </padding>
+      </Pane>
+      <Pane layoutY="14.0" prefHeight="50.0" prefWidth="1000.0" styleClass="blue-border" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <HBox layoutX="14.0" layoutY="10.0">
+               <children>
+                  <Button fx:id="playButton" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" text="Play">
+                     <styleClass>
+                        <String fx:value="buttons" />
+                        <String fx:value="playbar-buttons" />
+                     </styleClass></Button>
+                  <Button fx:id="pauseButton" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" text="Pause">
+                     <styleClass>
+                        <String fx:value="buttons" />
+                        <String fx:value="playbar-buttons" />
+                     </styleClass></Button>
+               </children>
+            </HBox>
+            <ProgressBar layoutX="385.0" layoutY="14.0" prefHeight="23.0" prefWidth="534.0" progress="0.0" />
+            <Slider layoutX="133.0" layoutY="16.0" prefHeight="17.0" prefWidth="237.0" />
+            <TextField layoutX="944.0" layoutY="10.0" prefWidth="237.0" promptText="Search" />
+         </children>
+      </Pane>
+      <Pane layoutX="295.0" layoutY="60.0" prefHeight="210.0" prefWidth="645.0" AnchorPane.leftAnchor="295.0" AnchorPane.rightAnchor="260.0">
+         <children>
+            <Label layoutX="24.0" layoutY="14.0" text="playing" textFill="WHITE">
+               <font>
+                  <Font name="SansSerif Regular" size="41.0" />
+               </font>
+            </Label>
+            <ImageView fx:id="albumArt" fitHeight="150.0" fitWidth="150.0" layoutX="185.0" layoutY="30.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@Music_Library.png" />
+               </image>
+            </ImageView>
+         </children>
+         <padding>
+            <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+         </padding>
+      </Pane>
+      <ListView fx:id="trackList" layoutX="295.0" layoutY="270.0" prefHeight="310.0" prefWidth="645.0" styleClass="dark-theme">
+         <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </padding>
+      </ListView>
+   </children>
+   <styleClass>
+      <String fx:value="dark-theme" />
+      <String fx:value="blue-border" />
+   </styleClass>
+</AnchorPane>
