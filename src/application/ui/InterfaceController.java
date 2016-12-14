@@ -1,9 +1,11 @@
-package application;
+package application.ui;
 
 import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import application.logic.MusicLibrary;
+import application.logic.MusicPlayer;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -23,7 +25,7 @@ import javafx.util.Duration;
 /**
  * MusicPlayerInterface.
  * 
- * @author Rocky Robson - A00914509
+ * @author Rocky Robson 
  * @version Dec 8, 2016
  */
 public class InterfaceController implements Initializable {
@@ -93,7 +95,7 @@ public class InterfaceController implements Initializable {
 
 
 	private void setPlayButton() {
-		Image playButtonImage = new Image(getClass().getResourceAsStream("Play.png"));
+		Image playButtonImage = new Image("images/Play.png");
 		playButton.setGraphic(new ImageView(playButtonImage));
 		playButton.setStyle("-fx-background-color: transparent");
 
@@ -104,7 +106,7 @@ public class InterfaceController implements Initializable {
 
 
 	private void setPauseButton() {
-		Image pauseButtonImage = new Image(getClass().getResourceAsStream("Pause.png"));
+		Image pauseButtonImage = new Image("images/Pause.png");
 		pauseButton.setGraphic(new ImageView(pauseButtonImage));
 		pauseButton.setStyle("-fx-background-color: transparent");
 

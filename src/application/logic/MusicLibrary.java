@@ -1,4 +1,4 @@
-package application;
+package application.logic;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -22,7 +22,7 @@ import javafx.stage.Window;
  * MusicLibrary. This class contains static methods used for importing a library
  * directory and proper displaying of its contents.
  * 
- * @author Rocky Robson - A00914509
+ * @author Rocky Robson 
  * @version Dec 8, 2016
  */
 public class MusicLibrary {
@@ -31,7 +31,7 @@ public class MusicLibrary {
 	/**
 	 * File path where the library directory is stored
 	 */
-	public static final String LIBRARY_DIRECTORY = "LibraryDirectory.lib";
+	public static final String LIBRARY_DIRECTORY = "src/application/database/LibraryDirectory.lib";
 
 
 	/**
@@ -182,7 +182,7 @@ public class MusicLibrary {
 	 */
 	public static Image setAlbumArt(File file) {
 
-		String path = "application/Music_Library.png";
+		String path = "images/Music_Library.png";
 		File[] fileList = file.listFiles();
 
 		for (int i = 0; i < fileList.length; i++) {
@@ -192,6 +192,7 @@ public class MusicLibrary {
 				try {
 					path = fileList[i].toURI().toURL().toString();
 				} catch (MalformedURLException e) {
+					System.out.println("Error: Unable to load album art");
 					e.printStackTrace();
 				}
 			}
@@ -202,7 +203,7 @@ public class MusicLibrary {
 
 	/**
 	 * Checks to see if this parameter file is a jpeg. The file is checked using
-	 * it's path
+	 * it's file path
 	 * 
 	 * @param filePath The file path to be checked.
 	 * @return True if and only if the file is a jpeg

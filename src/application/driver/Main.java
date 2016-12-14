@@ -1,4 +1,4 @@
-package application;
+package application.driver;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -9,6 +9,11 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
+/**
+ * Main. Driver Class
+ * @author Rocky Robson
+ * @version Dec 13, 2016
+ */
 public class Main extends Application {
 	
 	@Override
@@ -22,10 +27,6 @@ public class Main extends Application {
 		} catch (Exception e) {
 			Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, e);
 		}
-	}
-
-	public void init() {
-
 	}
 
 

@@ -1,4 +1,4 @@
-package application;
+package application.logic;
 
 import java.io.File;
 import java.text.DecimalFormat;
@@ -18,7 +18,7 @@ import javafx.util.Duration;
  * This plays media files using MediaPlayer. The media files are wrapped in a
  * javafx.scene.media.Media object.
  * 
- * @author Rocky Robson - A00914509
+ * @author Rocky Robson 
  * @version Dec 8, 2016
  */
 public class MusicPlayer {
