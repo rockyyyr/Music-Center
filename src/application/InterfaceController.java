@@ -11,6 +11,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Slider;
@@ -44,6 +45,8 @@ public class InterfaceController implements Initializable {
 	private Slider volumeSlider;
 	@FXML
 	private ProgressBar progressBar;
+	@FXML
+	private Label timeLabel;
 
 	/**
 	 * The currently selected media file. This file has functions for playing
@@ -67,6 +70,7 @@ public class InterfaceController implements Initializable {
 
 	private void setupComponents() {
 		initializeLibrary();
+		setTimeLabel();
 		setPlayButton();
 		setPauseButton();
 		setAddLibraryButton();
@@ -140,6 +144,24 @@ public class InterfaceController implements Initializable {
 	}
 
 
+	private void setTimeLabel() {
+		timeLabel.setText("0:00 / 0:00");
+	}
+
+
+	private void updateTimeLabel() {
+		ChangeListener<Duration> timeListener = new ChangeListener<Duration>() {
+
+			@Override
+			public void changed(ObservableValue<? extends Duration> arg0, Duration arg1, Duration arg2) {
+				timeLabel.setText(currentMedia.getTimeLabel());
+			}
+		};
+		currentMedia.getTimeProperty().addListener(timeListener);
+
+	}
+
+
 	private void setAddLibraryButton() {
 		addLibraryButton.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -181,6 +203,7 @@ public class InterfaceController implements Initializable {
 
 				currentMedia = new MusicPlayer(trackList.getSelectionModel().getSelectedItem());
 				setProgressBar();
+				updateTimeLabel();
 			}
 		});
 	}

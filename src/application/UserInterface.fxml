@@ -76,9 +76,14 @@
                      </styleClass></Button>
                </children>
             </HBox>
-            <ProgressBar fx:id="progressBar" layoutX="385.0" layoutY="14.0" prefHeight="23.0" prefWidth="534.0" progress="0.0" />
+            <ProgressBar fx:id="progressBar" layoutX="381.0" layoutY="14.0" prefHeight="5.0" prefWidth="418.0" progress="0.0" />
             <Slider fx:id="volumeSlider" layoutX="133.0" layoutY="16.0" prefHeight="17.0" prefWidth="237.0" />
-            <TextField layoutX="944.0" layoutY="10.0" prefWidth="237.0" promptText="Search" />
+            <TextField layoutX="1051.0" layoutY="10.0" prefHeight="31.0" prefWidth="130.0" promptText="Search" />
+            <Label fx:id="timeLabel" layoutX="812.0" layoutY="14.0" prefHeight="23.0" prefWidth="130.0" textFill="WHITE">
+               <font>
+                  <Font name="Microsoft Sans Serif" size="19.0" />
+               </font>
+            </Label>
          </children>
       </Pane>
       <Pane layoutX="295.0" layoutY="60.0" prefHeight="210.0" prefWidth="645.0" AnchorPane.leftAnchor="295.0" AnchorPane.rightAnchor="260.0">

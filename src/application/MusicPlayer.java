@@ -1,6 +1,7 @@
 package application;
 
 import java.io.File;
+import java.text.DecimalFormat;
 
 import org.apache.commons.io.FilenameUtils;
 
@@ -22,19 +23,13 @@ import javafx.util.Duration;
  */
 public class MusicPlayer {
 
+
 	/**
 	 * The currently selected media file. This file has functions for playing
 	 * and pausing and is updated as the user clicks through a track list of
 	 * files.
 	 */
 	private MediaPlayer currentMedia;
-
-
-	/**
-	 * Default constructor
-	 */
-	public MusicPlayer() {
-	}
 
 
 	/**
@@ -125,12 +120,39 @@ public class MusicPlayer {
 
 
 	/**
+	 * Returns the time label containing elapsed time and total time
+	 * 
+	 * @return The time label as a string
+	 */
+	public String getTimeLabel() {
+		String elapsed = getFormattedTime(currentMedia.getCurrentTime().toSeconds());
+		String total = getFormattedTime(currentMedia.getTotalDuration().toSeconds());
+		return String.format("%s / %s", elapsed, total);
+	}
+
+
+	/**
+	 * Formats total seconds into a standard time format: minutes : seconds
+	 * 
+	 * @param time The total number of seconds to format
+	 * @return Formatted time as a string
+	 */
+	private String getFormattedTime(double time) {
+		DecimalFormat df = new DecimalFormat("00");
+		int minutes = (int) time / 60;
+		int seconds = (int) time - (minutes * 60);
+
+		return String.format("%s:%s", df.format(minutes), df.format(seconds));
+	}
+
+
+	/**
 	 * Checks the parameter File Type. Accepted file types are mp3, wav, aif,
 	 * aiff, fxm, flv and m4a.
 	 * 
 	 * @param file The file to be checked
-	 * @return True if the parameter File is of an acceptable file type. Returns false
-	 *         if the file type is null or not accepted
+	 * @return True if the parameter File is of an acceptable file type. Returns
+	 *         false if the file type is null or not accepted
 	 */
 	public static boolean isAcceptableFileType(File file) {
 
