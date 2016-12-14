@@ -27,6 +27,7 @@ import javafx.util.Duration;
  */
 public class InterfaceController implements Initializable {
 
+
 	@FXML
 	private Button playButton;
 	@FXML
@@ -41,7 +42,7 @@ public class InterfaceController implements Initializable {
 	private ImageView albumArt;
 	@FXML
 	private Slider volumeSlider;
-	@FXML 
+	@FXML
 	private ProgressBar progressBar;
 
 	/**
@@ -65,12 +66,23 @@ public class InterfaceController implements Initializable {
 
 
 	private void setupComponents() {
+		initializeLibrary();
 		setPlayButton();
 		setPauseButton();
 		setAddLibraryButton();
 		setVolumeSlider();
 		setArtistListItemAction();
 		setTrackListItemAction();
+	}
+
+
+	private void initializeLibrary() {
+		File directory = new File(MusicLibrary.retrieveLibraryDirectory());
+
+		if (directory != null) {
+			artistList.setItems(MusicLibrary.populateArtistList(directory));
+			MusicLibrary.setFileNames(artistList);
+		}
 	}
 
 
@@ -102,6 +114,7 @@ public class InterfaceController implements Initializable {
 
 		volumeSlider.valueProperty().addListener(new ChangeListener<Number>() {
 
+
 			@Override
 			public void changed(ObservableValue<? extends Number> volumeSlider, Number oldVal, Number newVal) {
 
@@ -111,10 +124,12 @@ public class InterfaceController implements Initializable {
 
 		});
 	}
-	
-	private void setProgressBar(){
-		
+
+
+	private void setProgressBar() {
+
 		ChangeListener<Duration> progressChangeListener = new ChangeListener<Duration>() {
+
 
 			@Override
 			public void changed(ObservableValue<? extends Duration> value, Duration oldVal, Duration newVal) {
@@ -128,10 +143,11 @@ public class InterfaceController implements Initializable {
 	private void setAddLibraryButton() {
 		addLibraryButton.setOnAction(new EventHandler<ActionEvent>() {
 
+
 			@Override
 			public void handle(ActionEvent e) {
 				artistList
-						.setItems(MusicLibrary.selectDirectoryAndPopulateArtistList(playButton.getScene().getWindow()));
+						.setItems(MusicLibrary.showDialogWindow(playButton.getScene().getWindow()));
 				MusicLibrary.setFileNames(artistList);
 			}
 		});
@@ -140,6 +156,7 @@ public class InterfaceController implements Initializable {
 
 	private void setArtistListItemAction() {
 		artistList.setOnMouseClicked(new EventHandler<MouseEvent>() {
+
 
 			@Override
 			public void handle(MouseEvent e) {
@@ -154,6 +171,7 @@ public class InterfaceController implements Initializable {
 
 	private void setTrackListItemAction() {
 		trackList.setOnMouseClicked(new EventHandler<MouseEvent>() {
+
 
 			@Override
 			public void handle(MouseEvent e) {
