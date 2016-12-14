@@ -29,6 +29,12 @@ public class MusicLibrary {
 
 
 	/**
+	 * File path where the library directory is stored
+	 */
+	public static final String LIBRARY_DIRECTORY = "LibraryDirectory.lib";
+
+
+	/**
 	 * Retrieves the users music library directory path if one has been set
 	 * 
 	 * @return The users music library directory path as a string or null if a
@@ -38,7 +44,7 @@ public class MusicLibrary {
 
 		String directory = null;
 		List<String> lines = new ArrayList<>();
-		File libraryDirectory = new File("application.LibraryDirectory.txt");
+		File libraryDirectory = new File(LIBRARY_DIRECTORY);
 
 		try {
 			lines = Files.readAllLines(libraryDirectory.toPath());
@@ -62,7 +68,7 @@ public class MusicLibrary {
 	 */
 	public static void storeLibraryDirectory(String directoryPath) {
 
-		File libraryDirectory = new File("application.LibraryDirectory.txt");
+		File libraryDirectory = new File(LIBRARY_DIRECTORY);
 
 		try {
 			FileWriter writer = new FileWriter(libraryDirectory, false);
@@ -73,17 +79,18 @@ public class MusicLibrary {
 			e.printStackTrace();
 		}
 	}
-	
+
+
 	/**
-	 * Opens a dialog window where the user can select their music library 
+	 * Opens a dialog window where the user can select their music library
 	 * 
 	 * @param primaryStage The primary stage of the interface
 	 */
-	public static ObservableList<File> showDialogWindow(Window primaryStage){
-		
+	public static ObservableList<File> showDialogWindow(Window primaryStage) {
+
 		DirectoryChooser directoryChooser = new DirectoryChooser();
 		File directory = directoryChooser.showDialog(primaryStage);
-		
+
 		return populateArtistList(directory);
 	}
 
@@ -166,31 +173,6 @@ public class MusicLibrary {
 		});
 	}
 
-
-	// public static void setTrackNames(ListView<MediaPlayer> trackList) {
-	//
-	// trackList.setCellFactory(param -> new ListCell<File>() {
-	//
-	// @Override
-	// protected void updateItem(File file, boolean empty) {
-	// super.updateItem(player, empty);
-	//
-	// if (player != null) {
-	// player.getMedia().getMetadata().addListener(new MapChangeListener<String,
-	// Object>() {
-	//
-	// @Override
-	// public void onChanged(Change<? extends String, ? extends Object> ch) {
-	// if (ch.wasAdded() && ch.getKey().equals("title")) {
-	// setText(ch.getValueAdded().toString());
-	// setItem(player);
-	// }
-	// }
-	// });
-	// }
-	// }
-	// });
-	// }
 
 	/**
 	 * Returns a jpeg File from a directory containing multiple file types.

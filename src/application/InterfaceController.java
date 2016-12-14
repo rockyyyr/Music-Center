@@ -36,6 +36,8 @@ public class InterfaceController implements Initializable {
 	@FXML
 	private Button addLibraryButton;
 	@FXML
+	private Button addPlaylistButton;
+	@FXML
 	private ListView<File> artistList;
 	@FXML
 	private ListView<File> trackList;
@@ -152,6 +154,7 @@ public class InterfaceController implements Initializable {
 	private void updateTimeLabel() {
 		ChangeListener<Duration> timeListener = new ChangeListener<Duration>() {
 
+
 			@Override
 			public void changed(ObservableValue<? extends Duration> arg0, Duration arg1, Duration arg2) {
 				timeLabel.setText(currentMedia.getTimeLabel());
@@ -165,12 +168,22 @@ public class InterfaceController implements Initializable {
 	private void setAddLibraryButton() {
 		addLibraryButton.setOnAction(new EventHandler<ActionEvent>() {
 
-
 			@Override
 			public void handle(ActionEvent e) {
 				artistList
 						.setItems(MusicLibrary.showDialogWindow(playButton.getScene().getWindow()));
 				MusicLibrary.setFileNames(artistList);
+			}
+		});
+	}
+
+
+	private void setAddPlaylistButton() {
+		addPlaylistButton.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent e) {
+				
 			}
 		});
 	}
