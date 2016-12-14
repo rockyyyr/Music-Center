@@ -9,25 +9,20 @@
 /***********************************************
 			Color Constant - Blue
  ***********************************************/
-
 * {
-	blue-base: rgb(60,165,191);
+	blue-base: rgb(60, 165, 191);
 }
-
 
 /***********************************************
 					Theme
  ***********************************************/
-
 .dark-theme {
-	-fx-background-color: rgb(49,49,49);
+	-fx-background-color: rgb(49, 49, 49);
 }
-
 
 /***********************************************
 					Buttons
  ***********************************************/
-
 .buttons {
 	-fx-background-color: transparent;
 }
@@ -40,11 +35,9 @@
 	-fx-background-color: blue-base;
 }
 
-
 /***********************************************
 					List-View
  ***********************************************/
-
 .list-cell {
 	-fx-background-color: transparent;
 	-fx-text-fill: white;
@@ -54,11 +47,9 @@
 	-fx-background-color: blue-base;
 }
 
-
 /***********************************************
 					Scroll-Bar
  ***********************************************/
- 
 .scroll-bar {
 	-fx-background-color: transparent;
 }
@@ -68,15 +59,25 @@
 	-fx-background-radius: 0.0px;
 }
 
-.scroll-bar .increment-arrow, 
-.scroll-bar .decrement-arrow {
+.scroll-bar .increment-arrow, .scroll-bar .decrement-arrow {
 	-fx-background-color: blue-base;
 }
 
-.scroll-bar .increment-arrow:hover, 
-.scroll-bar .increment-arrow:focused,
-.scroll-bar .decrement-arrow:hover,
-.scroll-bar .decrement-arrow:focused {
+.scroll-bar .increment-arrow:hover, .scroll-bar .increment-arrow:focused,
+	.scroll-bar .decrement-arrow:hover, .scroll-bar .decrement-arrow:focused
+	{
 	
 }
 
+/***********************************************
+				  Volume Slider
+ ***********************************************/
+ 
+
+.slider .thumb {
+	-fx-background-color: blue-base;
+}
+
+.slider .track {
+	-fx-background-color: blue-base;
+}

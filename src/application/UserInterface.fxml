@@ -76,8 +76,8 @@
                      </styleClass></Button>
                </children>
             </HBox>
-            <ProgressBar layoutX="385.0" layoutY="14.0" prefHeight="23.0" prefWidth="534.0" progress="0.0" />
-            <Slider layoutX="133.0" layoutY="16.0" prefHeight="17.0" prefWidth="237.0" />
+            <ProgressBar fx:id="progressBar" layoutX="385.0" layoutY="14.0" prefHeight="23.0" prefWidth="534.0" progress="0.0" />
+            <Slider fx:id="volumeSlider" layoutX="133.0" layoutY="16.0" prefHeight="17.0" prefWidth="237.0" />
             <TextField layoutX="944.0" layoutY="10.0" prefWidth="237.0" promptText="Search" />
          </children>
       </Pane>

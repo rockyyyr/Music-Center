@@ -6,26 +6,31 @@ import java.net.MalformedURLException;
 import org.apache.commons.io.FilenameUtils;
 
 import javafx.collections.FXCollections;
-import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Window;
 
 /**
- * MusicLibrary. This class chooses the users local music folder and prepares
- * them for playback in a MusicPlayer.
+ * MusicLibrary. This class contains static methods used for importing a library
+ * directory and proper displaying of its contents.
  * 
  * @author Rocky Robson - A00914509
  * @version Dec 8, 2016
  */
 public class MusicLibrary {
 
-	public static ObservableList<File> populateArtistList(Window primaryStage) {
+	/**
+	 * Opens a window where the user is prompted to choose the directory
+	 * containing their music files.
+	 * 
+	 * @param primaryStage The main stage used for this user interface.
+	 * @return An observable list of folders containing music files. This list
+	 *         is used to populate the artist list view
+	 */
+	public static ObservableList<File> selectDirectoryAndPopulateArtistList(Window primaryStage) {
 
 		DirectoryChooser directoryChooser = new DirectoryChooser();
 		File directory = directoryChooser.showDialog(primaryStage);
@@ -41,9 +46,15 @@ public class MusicLibrary {
 	}
 
 
-	public static ObservableList<MediaPlayer> createTrackMedia(File file) {
+	/**
+	 * Populates an observable list with files from a directory file.
+	 * 
+	 * @param file The directory that contains music files
+	 * @return An ObesrvableList<File> containing music files
+	 */
+	public static ObservableList<File> populateTrackList(File file) {
 
-		ObservableList<MediaPlayer> mediaPlayers = FXCollections.observableArrayList();
+		ObservableList<File> trackList = FXCollections.observableArrayList();
 
 		if (file != null && file.isDirectory()) {
 
@@ -51,70 +62,79 @@ public class MusicLibrary {
 
 			for (int i = 0; i < fileList.length; i++) {
 
-				if (fileList[i] != null) {
+				if (MusicPlayer.isAcceptableFileType(fileList[i]))
+					trackList.add(fileList[i]);
 
-					try {
-						mediaPlayers.add(new MediaPlayer(new Media(fileList[i].toURI().toString())));
-					} catch (Exception e) {
-						System.out.println("ERROR: " + fileList[i] + " is an unsupported File Type");
-					}
-				}
 			}
 		}
-		return mediaPlayers;
+		return trackList;
 	}
 
 
-	/***************************
-	 * Producing Null List Items
-	 ***************************/
-	public static void setArtistNames(ListView<File> artistList) {
+	/**
+	 * Sets file names from File and re-populates a ListView<File> with the
+	 * formatted names.
+	 * 
+	 * @param list The list to be re-populated with File names
+	 */
+	public static void setFileNames(ListView<File> list) {
 
-		artistList.setCellFactory(param -> new ListCell<File>() {
+		list.setCellFactory(param -> new ListCell<File>() {
 
 			@Override
 			protected void updateItem(File file, boolean empty) {
 				super.updateItem(file, empty);
+
 				if (file != null) {
-					setText(file.getName());
-					setItem(file);
+
+					if (file.isDirectory()) {
+						setText(file.getName());
+						setItem(file);
+
+					} else if (file.isFile()) {
+						setText(file.getName());
+						setItem(file);
+					}
 				}
 			}
 		});
 	}
 
 
-	/***************************
-	 * Producing Null List Items
-	 ***************************/
-	public static void setTrackNames(ListView<MediaPlayer> trackList) {
+	// public static void setTrackNames(ListView<MediaPlayer> trackList) {
+	//
+	// trackList.setCellFactory(param -> new ListCell<File>() {
+	//
+	// @Override
+	// protected void updateItem(File file, boolean empty) {
+	// super.updateItem(player, empty);
+	//
+	// if (player != null) {
+	// player.getMedia().getMetadata().addListener(new MapChangeListener<String,
+	// Object>() {
+	//
+	// @Override
+	// public void onChanged(Change<? extends String, ? extends Object> ch) {
+	// if (ch.wasAdded() && ch.getKey().equals("title")) {
+	// setText(ch.getValueAdded().toString());
+	// setItem(player);
+	// }
+	// }
+	// });
+	// }
+	// }
+	// });
+	// }
 
-		trackList.setCellFactory(param -> new ListCell<MediaPlayer>() {
-
-			@Override
-			protected void updateItem(MediaPlayer player, boolean empty) {
-				super.updateItem(player, empty);
-
-				if (player != null) {
-					player.getMedia().getMetadata().addListener(new MapChangeListener<String, Object>() {
-
-						@Override
-						public void onChanged(Change<? extends String, ? extends Object> ch) {
-							if (ch.wasAdded() && ch.getKey().equals("title")) {
-								setText(ch.getValueAdded().toString());
-								setItem(player);
-							}
-						}
-					});
-				}
-			}
-		});
-	}
-
-
+	/**
+	 * Returns a jpeg File from a directory containing multiple file types.
+	 * 
+	 * @param file The directory containing a jpeg used for album art
+	 * @return An Image object containing album art
+	 */
 	public static Image setAlbumArt(File file) {
 
-		String path = "";
+		String path = "application/Music_Library.png";
 		File[] fileList = file.listFiles();
 
 		for (int i = 0; i < fileList.length; i++) {
@@ -132,7 +152,14 @@ public class MusicLibrary {
 	}
 
 
-	private static boolean isJPEG(String filePath) {
+	/**
+	 * Checks to see if this parameter file is a jpeg. The file is checked using
+	 * it's path
+	 * 
+	 * @param filePath The file path to be checked.
+	 * @return True if and only if the file is a jpeg
+	 */
+	public static boolean isJPEG(String filePath) {
 		return FilenameUtils.isExtension(filePath, "jpg");
 	}
 

@@ -4,16 +4,20 @@ import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.media.MediaPlayer;
+import javafx.util.Duration;
 
 /**
  * MusicPlayerInterface.
@@ -32,16 +36,20 @@ public class InterfaceController implements Initializable {
 	@FXML
 	private ListView<File> artistList;
 	@FXML
-	private ListView<MediaPlayer> trackList;
+	private ListView<File> trackList;
 	@FXML
 	private ImageView albumArt;
+	@FXML
+	private Slider volumeSlider;
+	@FXML 
+	private ProgressBar progressBar;
 
 	/**
 	 * The currently selected media file. This file has functions for playing
 	 * and pausing and is updated as the user clicks through the track list
 	 * library.
 	 */
-	private MediaPlayer currentMedia;
+	private MusicPlayer currentMedia;
 
 
 	/*
@@ -52,19 +60,15 @@ public class InterfaceController implements Initializable {
 	 */
 	@Override
 	public void initialize(URL url, ResourceBundle rsrcs) {
-		setupButtons();
-		setupListViews();
+		setupComponents();
 	}
 
 
-	private void setupButtons() {
+	private void setupComponents() {
 		setPlayButton();
 		setPauseButton();
 		setAddLibraryButton();
-	}
-
-
-	private void setupListViews() {
+		setVolumeSlider();
 		setArtistListItemAction();
 		setTrackListItemAction();
 	}
@@ -92,13 +96,43 @@ public class InterfaceController implements Initializable {
 	}
 
 
+	private void setVolumeSlider() {
+		volumeSlider.setMax(1);
+		volumeSlider.setValue(0.75);
+
+		volumeSlider.valueProperty().addListener(new ChangeListener<Number>() {
+
+			@Override
+			public void changed(ObservableValue<? extends Number> volumeSlider, Number oldVal, Number newVal) {
+
+				if (currentMedia != null)
+					currentMedia.setVolume(newVal.doubleValue());
+			}
+
+		});
+	}
+	
+	private void setProgressBar(){
+		
+		ChangeListener<Duration> progressChangeListener = new ChangeListener<Duration>() {
+
+			@Override
+			public void changed(ObservableValue<? extends Duration> value, Duration oldVal, Duration newVal) {
+				progressBar.setProgress(currentMedia.getProgressValue());
+			}
+		};
+		currentMedia.getTimeProperty().addListener(progressChangeListener);
+	}
+
+
 	private void setAddLibraryButton() {
 		addLibraryButton.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent e) {
-				artistList.setItems(MusicLibrary.populateArtistList(playButton.getScene().getWindow()));
-				MusicLibrary.setArtistNames(artistList);
+				artistList
+						.setItems(MusicLibrary.selectDirectoryAndPopulateArtistList(playButton.getScene().getWindow()));
+				MusicLibrary.setFileNames(artistList);
 			}
 		});
 	}
@@ -109,28 +143,26 @@ public class InterfaceController implements Initializable {
 
 			@Override
 			public void handle(MouseEvent e) {
-				trackList.setItems(MusicLibrary.createTrackMedia(artistList.getSelectionModel().getSelectedItem()));
-				MusicLibrary.setTrackNames(trackList);
+
+				trackList.setItems(MusicLibrary.populateTrackList(artistList.getSelectionModel().getSelectedItem()));
+				MusicLibrary.setFileNames(trackList);
 				albumArt.setImage(MusicLibrary.setAlbumArt(artistList.getSelectionModel().getSelectedItem()));
 			}
 		});
 	}
 
 
-	/***************************
-	 * Producing Null List Items
-	 ***************************/
 	private void setTrackListItemAction() {
 		trackList.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
 			@Override
 			public void handle(MouseEvent e) {
-				try {
-					trackList.getSelectionModel().getSelectedItem().play();
-					currentMedia = trackList.getSelectionModel().getSelectedItem();
-				} catch (Exception ex) {
-					System.out.println("ERROR: Null Item: ");
-				}
+
+				if (currentMedia != null)
+					currentMedia.stop();
+
+				currentMedia = new MusicPlayer(trackList.getSelectionModel().getSelectedItem());
+				setProgressBar();
 			}
 		});
 	}
