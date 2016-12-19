@@ -18,7 +18,7 @@ import javafx.util.Duration;
  * This plays media files using MediaPlayer. The media files are wrapped in a
  * javafx.scene.media.Media object.
  * 
- * @author Rocky Robson 
+ * @author Rocky Robson
  * @version Dec 8, 2016
  */
 public class MusicPlayer {
@@ -128,6 +128,16 @@ public class MusicPlayer {
 		String elapsed = getFormattedTime(currentMedia.getCurrentTime().toSeconds());
 		String total = getFormattedTime(currentMedia.getTotalDuration().toSeconds());
 		return String.format("%s / %s", elapsed, total);
+	}
+
+
+	/**
+	 * Returns the formatted total time
+	 * 
+	 * @return The total time as a formatted string
+	 */
+	public String getTotalTime() {
+		return getFormattedTime(currentMedia.getTotalDuration().toSeconds());
 	}
 
 

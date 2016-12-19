@@ -12,8 +12,12 @@ import org.apache.commons.io.FilenameUtils;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Window;
@@ -22,7 +26,7 @@ import javafx.stage.Window;
  * MusicLibrary. This class contains static methods used for importing a library
  * directory and proper displaying of its contents.
  * 
- * @author Rocky Robson 
+ * @author Rocky Robson
  * @version Dec 8, 2016
  */
 public class MusicLibrary {
@@ -96,10 +100,9 @@ public class MusicLibrary {
 
 
 	/**
-	 * Opens a window where the user is prompted to choose the directory
-	 * containing their music files.
+	 * Populates the artist list using the directory to the music library
 	 * 
-	 * @param primaryStage The main stage used for this user interface.
+	 * @param file The directory which contains the music library
 	 * @return An observable list of folders containing music files. This list
 	 *         is used to populate the artist list view
 	 */
@@ -149,7 +152,7 @@ public class MusicLibrary {
 	 * 
 	 * @param list The list to be re-populated with File names
 	 */
-	public static void setFileNames(ListView<File> list) {
+	public static void setFileNames(ListView<File> list, boolean isPlaylist) {
 
 		list.setCellFactory(param -> new ListCell<File>() {
 
@@ -164,13 +167,37 @@ public class MusicLibrary {
 						setText(file.getName());
 						setItem(file);
 
-					} else if (file.isFile()) {
-						setText(file.getName());
+					} else if (file.isFile() && isPlaylist == false) {
+						setText(MetaDataParser.getTitle(file));
+						setItem(file);
+
+					} else if (isPlaylist) {
+						setText(MetaDataParser.getArtist(file) + " - " + MetaDataParser.getTitle(file));
 						setItem(file);
 					}
 				}
 			}
 		});
+	}
+
+
+	public static void setContextMenu(ListView<File> list, ListView<File> playlist) {
+
+		MenuItem addPlaylist = new MenuItem();
+		addPlaylist.setText("Add to playlist");
+
+		addPlaylist.setOnAction(new EventHandler<ActionEvent>() {
+
+
+			@Override
+			public void handle(ActionEvent e) {
+				MusicPlaylist.addToPlaylist(list.getSelectionModel().getSelectedItem());
+				playlist.setItems(MusicPlaylist.populatePlaylistView());
+			}
+
+		});
+		
+		list.setContextMenu(new ContextMenu(addPlaylist));
 	}
 
 
@@ -197,6 +224,7 @@ public class MusicLibrary {
 				}
 			}
 		}
+
 		return new Image(path);
 	}
 

@@ -19,7 +19,7 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		try {
-			AnchorPane headAnchor = (AnchorPane) FXMLLoader.load(Main.class.getResource("UserInterface.fxml"));
+			AnchorPane headAnchor = (AnchorPane) FXMLLoader.load(getClass().getResource("/application/ui/UserInterface.fxml"));
 			Scene scene = new Scene(headAnchor);
 			primaryStage.setScene(scene);
 			primaryStage.setTitle("Music Center");
