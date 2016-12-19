@@ -4,10 +4,10 @@ import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import application.logic.MetaDataParser;
 import application.logic.MusicLibrary;
 import application.logic.MusicPlayer;
 import application.logic.MusicPlaylist;
+import application.utils.MetaDataParser;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;

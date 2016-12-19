@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.apache.commons.io.FilenameUtils;
 
+import application.utils.MetaDataParser;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
