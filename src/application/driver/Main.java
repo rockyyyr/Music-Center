@@ -3,11 +3,14 @@ package application.driver;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import application.logic.MusicPlaylist;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 /**
  * Main. Driver Class
@@ -27,6 +30,15 @@ public class Main extends Application {
 		} catch (Exception e) {
 			Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, e);
 		}
+		
+		primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>(){
+
+			@Override
+			public void handle(WindowEvent event) {
+				MusicPlaylist.saveCurrentPlaylistSelection();
+			}
+			
+		});
 	}
 
 

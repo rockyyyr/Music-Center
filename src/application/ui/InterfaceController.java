@@ -86,12 +86,12 @@ public class InterfaceController implements Initializable {
 
 	private void setupComponents() {
 		initializeLibrary();
+		initializePlaylist();
 		setTimeLabel();
 		setPlayButton();
 		setPauseButton();
 		setAddLibraryButton();
 		setAddPlaylistButton();
-		setPlaylists();
 		setVolumeSlider();
 		setArtistListItemAction();
 		setTrackListView();
@@ -104,6 +104,19 @@ public class InterfaceController implements Initializable {
 		if (directory != null) {
 			artistList.setItems(MusicLibrary.populateArtistList(directory));
 			MusicLibrary.setFileNames(artistList, false);
+		}
+	}
+
+
+	private void initializePlaylist() {
+		setPlaylists();
+		File playlist = new File(MusicPlaylist.retrieveCurrentPlaylist());
+
+		if (playlist != null) {
+			MusicPlaylist.setCurrentPlaylist(playlist);
+			playlists.getSelectionModel().select(playlist);
+			playlistView.setItems(MusicPlaylist.populatePlaylistView());
+			MusicLibrary.setFileNames(playlistView, true);
 		}
 	}
 
@@ -271,7 +284,7 @@ public class InterfaceController implements Initializable {
 			public void handle(MouseEvent e) {
 
 				if (e.getButton().equals(MouseButton.PRIMARY)) {
-					
+
 					if (currentMedia != null)
 						currentMedia.stop();
 

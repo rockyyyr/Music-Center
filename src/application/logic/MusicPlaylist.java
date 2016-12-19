@@ -6,6 +6,9 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import javafx.collections.FXCollections;
@@ -25,8 +28,43 @@ public class MusicPlaylist {
 
 	public static final String PLAYLIST_EXT = ".ply";
 	public static final String PLAYLIST_PATH = "src/application/database/playlists/";
+	public static final String PLAYLIST_DIR = "src/application/database/PlaylistDirectory.lib";
 
 	private static String currentPlaylist;
+
+
+	public static String retrieveCurrentPlaylist() {
+		String directory = null;
+		List<String> lines = new ArrayList<>();
+		File playlistDirectory = new File(PLAYLIST_DIR);
+
+		try {
+			lines = Files.readAllLines(playlistDirectory.toPath());
+		} catch (IOException e) {
+			System.out.println("ERROR: Unable to read file.");
+			e.printStackTrace();
+		}
+
+		if (lines != null && lines.isEmpty() == false) {
+			directory = lines.get(0);
+		}
+
+		return directory;
+	}
+
+
+	public static void saveCurrentPlaylistSelection() {
+		File libraryDirectory = new File(PLAYLIST_DIR);
+
+		try {
+			FileWriter writer = new FileWriter(libraryDirectory, false);
+			writer.write(currentPlaylist);
+			writer.close();
+		} catch (IOException e) {
+			System.out.println("ERROR: Unable to write to file.");
+			e.printStackTrace();
+		}
+	}
 
 
 	public static void createPlaylist() {
@@ -140,7 +178,7 @@ public class MusicPlaylist {
 
 			protected void updateItem(File file, boolean empty) {
 				super.updateItem(file, empty);
-				
+
 				if (file != null) {
 					String name = file.getName().replace(".ply", "");
 					setText(name);
@@ -156,7 +194,6 @@ public class MusicPlaylist {
 	public static void setCurrentPlaylist(File file) {
 		if (file != null)
 			currentPlaylist = file.getPath();
-
 	}
 
 }
