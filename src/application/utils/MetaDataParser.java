@@ -1,4 +1,5 @@
 package application.utils;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -15,7 +16,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 /**
- * MetaDataParser.
+ * MetaDataParser. This class can retrieve a track title and artist.
  * 
  * @author Rocky Robson - A00914509
  * @version Dec 14, 2016
@@ -23,7 +24,7 @@ import org.xml.sax.helpers.DefaultHandler;
 public class MetaDataParser {
 
 
-	public static Metadata parseMetaData(File file) {
+	private static Metadata parseMetaData(File file) {
 		Metadata data = new Metadata();
 
 		try {
@@ -44,15 +45,28 @@ public class MetaDataParser {
 		}
 		return data;
 	}
-	
-	public static String getTitle(File file){
+
+
+	/**
+	 * Get the title from the metadata of a specific file.
+	 * 
+	 * @param file The track whose title will be retrieved
+	 * @return The track title as a string
+	 */
+	public static String getTitle(File file) {
 		return parseMetaData(file).get("title");
-		
-	}
-	
-	public static String getArtist(File file){
-		return parseMetaData(file).get("creator");
+
 	}
 
+
+	/**
+	 * Get the artist from the metadata of a specific file.
+	 * 
+	 * @param file The track whose artist will be retrieved
+	 * @return The track's artist as a string
+	 */
+	public static String getArtist(File file) {
+		return parseMetaData(file).get("creator");
+	}
 
 }

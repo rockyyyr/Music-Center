@@ -18,7 +18,7 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.TextInputDialog;
 
 /**
- * MusicPlaylist. This is where custom user playlists are stored
+ * MusicPlaylist. This is where custom user playlists are created and stored.
  * 
  * @author Rocky Robson
  * @version Dec 8, 2016
@@ -33,6 +33,12 @@ public class MusicPlaylist {
 	private static String currentPlaylist;
 
 
+	/**
+	 * Retrieves the last playlist used from the application database if one has
+	 * previously been created.
+	 * 
+	 * @return The last used playlist path as a string
+	 */
 	public static String retrieveCurrentPlaylist() {
 		String directory = null;
 		List<String> lines = new ArrayList<>();
@@ -53,6 +59,9 @@ public class MusicPlaylist {
 	}
 
 
+	/**
+	 * Saves the current playlist to the application database
+	 */
 	public static void saveCurrentPlaylistSelection() {
 		File libraryDirectory = new File(PLAYLIST_DIR);
 
@@ -67,6 +76,11 @@ public class MusicPlaylist {
 	}
 
 
+	/**
+	 * Opens a dialog window where the user can input the name for a new
+	 * playlist. When a valid name has been entered and the user pressed "Ok" a
+	 * new playlist file is created and stored in the application database.
+	 */
 	public static void createPlaylist() {
 
 		String playlistName = "new playlist";
@@ -85,6 +99,9 @@ public class MusicPlaylist {
 	}
 
 
+	/*
+	 * Creates a new playlist file with the user's specified name
+	 */
 	private static void storePlaylist(String name) {
 
 		File playlist = new File(PLAYLIST_PATH + name + PLAYLIST_EXT);
@@ -98,6 +115,11 @@ public class MusicPlaylist {
 	}
 
 
+	/**
+	 * Adds a file path to the current playlist
+	 * 
+	 * @param file The track to be added be added to the playlist
+	 */
 	public static void addToPlaylist(File file) {
 		File playlist = new File(currentPlaylist);
 
@@ -113,6 +135,12 @@ public class MusicPlaylist {
 	}
 
 
+	/**
+	 * Populates the menu of playlists from the list of playlists in the
+	 * application database
+	 * 
+	 * @return All created playlists in the database as an ObservableList<File>
+	 */
 	public static ObservableList<File> populatePlaylistMenu() {
 
 		ObservableList<File> playlists = FXCollections.observableArrayList();
@@ -124,6 +152,13 @@ public class MusicPlaylist {
 	}
 
 
+	/**
+	 * Populates the playlist track view with all the tracks in the currently
+	 * selected playlist.
+	 * 
+	 * @return The tracks in the currently selected playlist as an
+	 *         ObservableList<File>
+	 */
 	public static ObservableList<File> populatePlaylistView() {
 		ObservableList<File> playlist = FXCollections.observableArrayList();
 		File directory = new File(currentPlaylist);
@@ -191,6 +226,12 @@ public class MusicPlaylist {
 	}
 
 
+	/**
+	 * Sets the user selected playlist to this.currentPlaylist which is used to
+	 * populate the playlist view or when adding tracks to a playlist
+	 * 
+	 * @param file
+	 */
 	public static void setCurrentPlaylist(File file) {
 		if (file != null)
 			currentPlaylist = file.getPath();

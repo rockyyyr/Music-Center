@@ -64,7 +64,7 @@ public class InterfaceController implements Initializable {
 	@FXML
 	private Label trackLabel;
 
-	/**
+	/*
 	 * The currently selected media file. This file has functions for playing
 	 * and pausing and is updated as the user clicks through the track list
 	 * library.
@@ -72,11 +72,8 @@ public class InterfaceController implements Initializable {
 	private MusicPlayer currentMedia;
 
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see javafx.fxml.Initializable#initialize(java.net.URL,
-	 * java.util.ResourceBundle)
+	/**
+	 * Initializes the UserInterface components
 	 */
 	@Override
 	public void initialize(URL url, ResourceBundle rsrcs) {
@@ -84,6 +81,9 @@ public class InterfaceController implements Initializable {
 	}
 
 
+	/*
+	 * Calls all component setup methods
+	 */
 	private void setupComponents() {
 		initializeLibrary();
 		initializePlaylist();
@@ -98,6 +98,12 @@ public class InterfaceController implements Initializable {
 	}
 
 
+	/*
+	 * Initializes the music library if a music library has been previously
+	 * selected. The library being used when the application was last shutdown
+	 * will be automatically saved and retrieved on the next start up. If no
+	 * library has been previously selected, no library is retrieved.
+	 */
 	private void initializeLibrary() {
 		File directory = new File(MusicLibrary.retrieveLibraryDirectory());
 
@@ -108,6 +114,12 @@ public class InterfaceController implements Initializable {
 	}
 
 
+	/*
+	 * Initializes the music playlist if a playlist has been previously created.
+	 * The playlist being used when the application was last shut down will be
+	 * automatically saved and retrieved on the next start up. If no playlist
+	 * was previously created, no playlist will be retrieved
+	 */
 	private void initializePlaylist() {
 		setPlaylists();
 		File playlist = new File(MusicPlaylist.retrieveCurrentPlaylist());
@@ -143,6 +155,9 @@ public class InterfaceController implements Initializable {
 	}
 
 
+	/*
+	 * Sets up the volume slider. Default value is 75%
+	 */
 	private void setVolumeSlider() {
 		volumeSlider.setMax(1);
 		volumeSlider.setValue(0.75);
@@ -160,6 +175,10 @@ public class InterfaceController implements Initializable {
 	}
 
 
+	/*
+	 * Sets the progress bar to display current track progress. This method is
+	 * called every time a new track is selected.
+	 */
 	private void setProgressBar() {
 
 		ChangeListener<Duration> progressChangeListener = new ChangeListener<Duration>() {
@@ -174,27 +193,49 @@ public class InterfaceController implements Initializable {
 	}
 
 
+	/*
+	 * The default time label to be displayed when no track is currently
+	 * selected
+	 */
 	private void setTimeLabel() {
 		timeLabel.setText("0:00 / 0:00");
 	}
 
 
+	/*
+	 * Sets the artist and track information to be displayed beside the album
+	 * art during playback
+	 * 
+	 * @param file The file whose info will be displayed
+	 */
 	private void setInfoLabels(File file) {
 		setArtistLabel(file);
 		setTrackLabel(file);
 	}
 
 
+	/*
+	 * Track artist is retrieved from the MetaDataParser. This info is displayed
+	 * next to the album art for currently playing media
+	 */
 	private void setArtistLabel(File file) {
 		artistLabel.setText("[ " + MetaDataParser.getArtist(file) + " ]");
 	}
 
 
+	/*
+	 * Track title is retrieved from the MetaDataParser. This info is displayed
+	 * next to the album art for currently playing media
+	 */
 	private void setTrackLabel(File file) {
 		trackLabel.setText("- " + MetaDataParser.getTitle(file));
 	}
 
 
+	/*
+	 * A ChangeListener is used to update the elapsed/total time label using
+	 * information from this.currentMedia.
+	 */
 	private void updateTimeLabel() {
 		ChangeListener<Duration> timeListener = new ChangeListener<Duration>() {
 
@@ -208,6 +249,11 @@ public class InterfaceController implements Initializable {
 	}
 
 
+	/*
+	 * When Add library is clicked a dialog window opens asking for the music
+	 * library directory. When a directory is selected it is used to populate
+	 * the artist list view and its files names are set.
+	 */
 	private void setAddLibraryButton() {
 		addLibraryButton.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -222,6 +268,10 @@ public class InterfaceController implements Initializable {
 	}
 
 
+	/*
+	 * When Add Playlist button is clicked the user is prompted to enter a new
+	 * playlist name and a new file is created.
+	 */
 	private void setAddPlaylistButton() {
 		addPlaylistButton.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -235,6 +285,12 @@ public class InterfaceController implements Initializable {
 	}
 
 
+	/*
+	 * Populates the playlist selection menu, sets the menu items to display
+	 * their file names. When a menu item is selected the playlist view gets
+	 * cleared then re-populated and the playlist track names are set to
+	 * "artist - track".
+	 */
 	private void setPlaylists() {
 		setPlaylistItemAction();
 		playlists.setItems(MusicPlaylist.populatePlaylistMenu());
@@ -255,6 +311,11 @@ public class InterfaceController implements Initializable {
 	}
 
 
+	/*
+	 * When an item is clicked in the artist list view the selected directory is
+	 * used to populate the track list view and the tracklist's files are set to
+	 * display track titles. Album art is also set.
+	 */
 	private void setArtistListItemAction() {
 		artistList.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
@@ -270,12 +331,24 @@ public class InterfaceController implements Initializable {
 	}
 
 
+	/*
+	 * Sets up the context menu in the tracklist view that pops up when a user
+	 * right clicks on a track. The only option in the context menu is to add
+	 * the selected track to the current playlist.
+	 */
 	public void setTrackListView() {
 		setTrackListItemAction();
 		MusicLibrary.setContextMenu(trackList, playlistView);
 	}
 
 
+	/*
+	 * Sets the action for when an track is selected in the track list view. <p>
+	 * If a track is left clicked, the selected track is set as
+	 * MusicPlayer.currentMedia which is then used to control play, pause and
+	 * other things related to that single track. <p> Each time a new track is
+	 * selected it gets set to this.currentMedia.
+	 */
 	private void setTrackListItemAction() {
 		trackList.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
@@ -300,6 +373,13 @@ public class InterfaceController implements Initializable {
 	}
 
 
+	/*
+	 * Sets the action for when a track is selected in the playlist view. <p>
+	 * When a playlist track has been left clicked it is set to
+	 * MusicPlayer.currentMedia which is used to control play, pause, volume,
+	 * time remaining and other things related to this track. This current
+	 * tracks album art is also set to be displayed
+	 */
 	private void setPlaylistItemAction() {
 		playlistView.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
