@@ -47,7 +47,7 @@ public class MusicLibrary {
 	 */
 	public static String retrieveLibraryDirectory() {
 
-		String directory = null;
+		String directory = "";
 		List<String> lines = new ArrayList<>();
 		File libraryDirectory = new File(LIBRARY_DIRECTORY);
 

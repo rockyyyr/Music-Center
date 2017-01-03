@@ -47,6 +47,10 @@
 	-fx-background-color: blue-base;
 }
 
+.list-cell:empty {
+    -fx-background-color: transparent;
+}
+
 /***********************************************
 					Scroll-Bar
  ***********************************************/

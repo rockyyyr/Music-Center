@@ -67,7 +67,8 @@ public class MusicPlayer {
 	 * Play the currently selected media file
 	 */
 	public void play() {
-		currentMedia.play();
+		if (currentMedia != null)
+			currentMedia.play();
 	}
 
 
@@ -75,7 +76,8 @@ public class MusicPlayer {
 	 * Pause the currently selected media file
 	 */
 	public void pause() {
-		currentMedia.pause();
+		if (currentMedia != null)
+			currentMedia.pause();
 	}
 
 
@@ -83,7 +85,8 @@ public class MusicPlayer {
 	 * Stops the currently selected media file
 	 */
 	public void stop() {
-		currentMedia.stop();
+		if (currentMedia != null)
+			currentMedia.stop();
 	}
 
 
@@ -94,8 +97,10 @@ public class MusicPlayer {
 	 *        Must be between 0 and 1
 	 */
 	public void setVolume(double volume) {
-		if (volume >= 0 && volume <= 1)
-			currentMedia.setVolume(volume);
+		if (currentMedia != null) {
+			if (volume >= 0 && volume <= 1)
+				currentMedia.setVolume(volume);
+		}
 	}
 
 

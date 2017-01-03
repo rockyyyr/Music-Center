@@ -44,7 +44,7 @@ public class InterfaceController implements Initializable {
 	@FXML
 	private Button addPlaylistButton;
 	@FXML
-	private ComboBox<File> playlists;
+	private ComboBox<String> playlists;
 	@FXML
 	private ListView<File> artistList;
 	@FXML
@@ -105,11 +105,17 @@ public class InterfaceController implements Initializable {
 	 * library has been previously selected, no library is retrieved.
 	 */
 	private void initializeLibrary() {
-		File directory = new File(MusicLibrary.retrieveLibraryDirectory());
 
-		if (directory != null) {
-			artistList.setItems(MusicLibrary.populateArtistList(directory));
-			MusicLibrary.setFileNames(artistList, false);
+		String directoryPath = MusicLibrary.retrieveLibraryDirectory();
+		
+		if (directoryPath != null && directoryPath.length() > 0) {
+			
+			File directory = new File(directoryPath);
+
+			if (directory != null) {
+				artistList.setItems(MusicLibrary.populateArtistList(directory));
+				MusicLibrary.setFileNames(artistList, false);
+			}
 		}
 	}
 
@@ -122,7 +128,7 @@ public class InterfaceController implements Initializable {
 	 */
 	private void initializePlaylist() {
 		setPlaylists();
-		File playlist = new File(MusicPlaylist.retrieveCurrentPlaylist());
+		String playlist = MusicPlaylist.retrieveCurrentPlaylist();
 
 		if (playlist != null) {
 			MusicPlaylist.setCurrentPlaylist(playlist);
@@ -160,7 +166,7 @@ public class InterfaceController implements Initializable {
 	 */
 	private void setVolumeSlider() {
 		volumeSlider.setMax(1);
-		volumeSlider.setValue(0.75);
+		volumeSlider.setValue(0.05);
 
 		volumeSlider.valueProperty().addListener(new ChangeListener<Number>() {
 
@@ -172,6 +178,15 @@ public class InterfaceController implements Initializable {
 					currentMedia.setVolume(newVal.doubleValue());
 			}
 		});
+	}
+
+
+	/*
+	 * Returns the current volume determined by the position of the volume
+	 * slider in the interface. Initial value is 75%
+	 */
+	private double getCurrentVoume() {
+		return volumeSlider.getValue();
 	}
 
 
@@ -278,7 +293,7 @@ public class InterfaceController implements Initializable {
 
 			@Override
 			public void handle(ActionEvent e) {
-				MusicPlaylist.createPlaylist();
+				MusicPlaylist.openPlaylistCreationDialog();
 				setPlaylists();
 			}
 		});
@@ -294,7 +309,7 @@ public class InterfaceController implements Initializable {
 	private void setPlaylists() {
 		setPlaylistItemAction();
 		playlists.setItems(MusicPlaylist.populatePlaylistMenu());
-		MusicPlaylist.setFileNames(playlists);
+		MusicPlaylist.setContextMenu(playlistView);
 
 		playlists.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -322,7 +337,6 @@ public class InterfaceController implements Initializable {
 
 			@Override
 			public void handle(MouseEvent e) {
-
 				trackList.setItems(MusicLibrary.populateTrackList(artistList.getSelectionModel().getSelectedItem()));
 				MusicLibrary.setFileNames(trackList, false);
 				albumArt.setImage(MusicLibrary.setAlbumArt(artistList.getSelectionModel().getSelectedItem()));
@@ -358,15 +372,19 @@ public class InterfaceController implements Initializable {
 
 				if (e.getButton().equals(MouseButton.PRIMARY)) {
 
-					if (currentMedia != null)
-						currentMedia.stop();
+					if (trackList.getSelectionModel().getSelectedItem() != null) {
 
-					File file = trackList.getSelectionModel().getSelectedItem();
+						if (currentMedia != null)
+							currentMedia.stop();
 
-					currentMedia = new MusicPlayer(file);
-					setInfoLabels(file);
-					setProgressBar();
-					updateTimeLabel();
+						File file = trackList.getSelectionModel().getSelectedItem();
+
+						currentMedia = new MusicPlayer(file);
+						currentMedia.setVolume(getCurrentVoume());
+						setInfoLabels(file);
+						setProgressBar();
+						updateTimeLabel();
+					}
 				}
 			}
 		});
@@ -386,17 +404,25 @@ public class InterfaceController implements Initializable {
 
 			@Override
 			public void handle(MouseEvent e) {
-				if (currentMedia != null)
-					currentMedia.stop();
 
-				File file = playlistView.getSelectionModel().getSelectedItem();
+				if (e.getButton().equals(MouseButton.PRIMARY)) {
 
-				currentMedia = new MusicPlayer(file);
-				albumArt.setImage(MusicLibrary.setAlbumArt(file.getParentFile()));
+					if (playlistView.getSelectionModel().getSelectedItem() != null) {
 
-				setInfoLabels(file);
-				setProgressBar();
-				updateTimeLabel();
+						if (currentMedia != null)
+							currentMedia.stop();
+
+						File file = playlistView.getSelectionModel().getSelectedItem();
+
+						currentMedia = new MusicPlayer(file);
+						currentMedia.setVolume(getCurrentVoume());
+						albumArt.setImage(MusicLibrary.setAlbumArt(file.getParentFile()));
+
+						setInfoLabels(file);
+						setProgressBar();
+						updateTimeLabel();
+					}
+				}
 			}
 
 		});

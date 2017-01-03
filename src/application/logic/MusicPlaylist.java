@@ -1,9 +1,6 @@
 package application.logic;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -11,10 +8,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import application.database.Database;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextInputDialog;
 
 /**
@@ -40,6 +43,7 @@ public class MusicPlaylist {
 	 * @return The last used playlist path as a string
 	 */
 	public static String retrieveCurrentPlaylist() {
+
 		String directory = null;
 		List<String> lines = new ArrayList<>();
 		File playlistDirectory = new File(PLAYLIST_DIR);
@@ -60,9 +64,15 @@ public class MusicPlaylist {
 
 
 	/**
-	 * Saves the current playlist to the application database
+	 * Saves the current playlist to the application database. This runs on
+	 * application shut down so that on the next application start up the
+	 * current playlist is retrieved.
 	 */
 	public static void saveCurrentPlaylistSelection() {
+		
+		if(currentPlaylist == null)
+			return;
+
 		File libraryDirectory = new File(PLAYLIST_DIR);
 
 		try {
@@ -81,7 +91,7 @@ public class MusicPlaylist {
 	 * playlist. When a valid name has been entered and the user pressed "Ok" a
 	 * new playlist file is created and stored in the application database.
 	 */
-	public static void createPlaylist() {
+	public static void openPlaylistCreationDialog() {
 
 		String playlistName = "new playlist";
 
@@ -103,15 +113,7 @@ public class MusicPlaylist {
 	 * Creates a new playlist file with the user's specified name
 	 */
 	private static void storePlaylist(String name) {
-
-		File playlist = new File(PLAYLIST_PATH + name + PLAYLIST_EXT);
-
-		try {
-			playlist.createNewFile();
-		} catch (IOException e) {
-			System.out.println("Error: Unable to create playlist file");
-			e.printStackTrace();
-		}
+		Database.createPlaylist(name);
 	}
 
 
@@ -121,17 +123,16 @@ public class MusicPlaylist {
 	 * @param file The track to be added be added to the playlist
 	 */
 	public static void addToPlaylist(File file) {
-		File playlist = new File(currentPlaylist);
-
-		try {
-			FileWriter writer = new FileWriter(playlist, true);
-			writer.write(file.getPath() + "\n");
-			writer.close();
-		} catch (IOException e) {
-			System.out.println("ERROR: Unable to write to file.");
-			e.printStackTrace();
+		if (file != null) {
+			Database.addToPlaylist(currentPlaylist, file.getPath());
 		}
+	}
 
+
+	public static void removeTrackFromPlaylist(File file) {
+		if (file != null) {
+			Database.deleteFromPlaylist(currentPlaylist, file.getPath());
+		}
 	}
 
 
@@ -141,13 +142,15 @@ public class MusicPlaylist {
 	 * 
 	 * @return All created playlists in the database as an ObservableList<File>
 	 */
-	public static ObservableList<File> populatePlaylistMenu() {
+	public static ObservableList<String> populatePlaylistMenu() {
 
-		ObservableList<File> playlists = FXCollections.observableArrayList();
-		File directory = new File(PLAYLIST_PATH);
-
-		playlists.addAll(directory.listFiles());
-
+		ObservableList<String> playlists = FXCollections.observableArrayList();
+		String[] tables = Database.listAllPlaylists();
+		
+		if(tables.length > 0){
+			for(String playlist : tables)
+				playlists.add(playlist);
+		}
 		return playlists;
 	}
 
@@ -160,25 +163,12 @@ public class MusicPlaylist {
 	 *         ObservableList<File>
 	 */
 	public static ObservableList<File> populatePlaylistView() {
+
 		ObservableList<File> playlist = FXCollections.observableArrayList();
-		File directory = new File(currentPlaylist);
+		String[] tracks = Database.retrievePlaylist(currentPlaylist);
 
-		if (directory.length() != 0) {
-			try {
-				FileReader fr = new FileReader(directory);
-				BufferedReader reader = new BufferedReader(fr);
-
-				while (reader.ready()) {
-					playlist.add(new File(reader.readLine()));
-				}
-
-				reader.close();
-
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
+		for (String track : tracks) {
+			playlist.add(new File(track));
 		}
 
 		return playlist;
@@ -232,9 +222,31 @@ public class MusicPlaylist {
 	 * 
 	 * @param file
 	 */
-	public static void setCurrentPlaylist(File file) {
+	public static void setCurrentPlaylist(String file) {
 		if (file != null)
-			currentPlaylist = file.getPath();
+			currentPlaylist = file;
+	}
+
+
+	public static void setContextMenu(ListView<File> playlist) {
+
+		MenuItem addPlaylist = new MenuItem();
+		addPlaylist.setText("Remove from playlist");
+
+		addPlaylist.setOnAction(new EventHandler<ActionEvent>() {
+
+
+			@Override
+			public void handle(ActionEvent e) {
+				removeTrackFromPlaylist(playlist.getSelectionModel().getSelectedItem());
+				playlist.setItems(null);
+				playlist.setItems(populatePlaylistView());
+			}
+
+		});
+
+		playlist.setContextMenu(new ContextMenu(addPlaylist));
+
 	}
 
 }

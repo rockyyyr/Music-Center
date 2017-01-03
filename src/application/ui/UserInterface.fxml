@@ -62,7 +62,7 @@
                         <Font name="SansSerif Regular" size="41.0" />
                      </font>
                   </Label>
-                  <ListView fx:id="playlistView" layoutY="109.0" prefHeight="431.0" prefWidth="247.0" styleClass="dark-theme" />
+                  <ListView fx:id="playlistView" layoutY="109.0" prefWidth="247.0" styleClass="dark-theme" />
                   <Button fx:id="addPlaylistButton" layoutX="151.0" layoutY="23.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="85.0" text="+ playlist" textFill="WHITE">
                      <font>
                         <Font name="Microsoft Sans Serif" size="16.0" />
