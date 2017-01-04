@@ -152,7 +152,7 @@ public class MusicPlayer {
 	 * @param time The total number of seconds to format
 	 * @return Formatted time as a string
 	 */
-	private String getFormattedTime(double time) {
+	public static String getFormattedTime(double time) {
 		DecimalFormat df = new DecimalFormat("00");
 		int minutes = (int) time / 60;
 		int seconds = (int) time - (minutes * 60);

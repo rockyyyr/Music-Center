@@ -15,6 +15,8 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
+import application.logic.MusicPlayer;
+
 /**
  * MetaDataParser. This class can retrieve a track title and artist.
  * 
@@ -67,6 +69,17 @@ public class MetaDataParser {
 	 */
 	public static String getArtist(File file) {
 		return parseMetaData(file).get("creator");
+	}
+	
+	/**
+	 * Get the formatted duration of a track (mm:ss)
+	 * 
+	 * @param file The track to get the duration of
+	 * @return The formatted duration of a track as a string
+	 */
+	public static String getDuration(File file){
+		double durationMillis = Double.valueOf(parseMetaData(file).get("xmpDM:duration"));
+		return MusicPlayer.getFormattedTime(durationMillis);
 	}
 
 }
