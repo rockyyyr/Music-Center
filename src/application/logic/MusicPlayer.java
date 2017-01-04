@@ -14,7 +14,7 @@ import javafx.util.Duration;
 /**
  * MusicPlayer. This is a wrapper class for javafx.scene.media.MediaPlayer
  * objects.
- * <p>
+ *
  * This plays media files using MediaPlayer. The media files are wrapped in a
  * javafx.scene.media.Media object.
  * 
@@ -173,6 +173,9 @@ public class MusicPlayer {
 
 		if (file == null)
 			return false;
+
+		if (file.isDirectory())
+			return true;
 
 		boolean acceptable = false;
 		String ext = FilenameUtils.getExtension(file.getPath());

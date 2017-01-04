@@ -33,6 +33,11 @@ public class MusicPlaylist {
 	public static final String PLAYLIST_PATH = "src/application/database/playlists/";
 	public static final String PLAYLIST_DIR = "src/application/database/PlaylistDirectory.lib";
 
+	/*
+	 * The currently selected playlist name. This playlist name is used when
+	 * retrieving last used playlist on start up, saving last used playlist on
+	 * shutdown and other playlist utilities
+	 */
 	private static String currentPlaylist;
 
 
@@ -88,8 +93,10 @@ public class MusicPlaylist {
 
 	/**
 	 * Opens a dialog window where the user can input the name for a new
-	 * playlist. When a valid name has been entered and the user pressed "Ok" a
-	 * new playlist file is created and stored in the application database.
+	 * playlist.
+	 * 
+	 * When a valid name has been entered and the user pressed "Ok" a new
+	 * playlist file is created and stored in the application database.
 	 */
 	public static void openPlaylistCreationDialog() {
 
@@ -106,6 +113,7 @@ public class MusicPlaylist {
 			playlistName = result.get();
 
 		storePlaylist(playlistName);
+		setCurrentPlaylist(playlistName);
 	}
 
 
@@ -114,6 +122,7 @@ public class MusicPlaylist {
 	 */
 	private static void storePlaylist(String name) {
 		Database.createPlaylist(name);
+
 	}
 
 
@@ -226,11 +235,11 @@ public class MusicPlaylist {
 	 * Sets the user selected playlist to this.currentPlaylist which is used to
 	 * populate the playlist view or when adding tracks to a playlist
 	 * 
-	 * @param file
+	 * @param playlistName The name of the playlist to set
 	 */
-	public static void setCurrentPlaylist(String file) {
-		if (file != null)
-			currentPlaylist = file;
+	public static void setCurrentPlaylist(String playlistName) {
+		if (playlistName != null)
+			currentPlaylist = playlistName;
 	}
 
 

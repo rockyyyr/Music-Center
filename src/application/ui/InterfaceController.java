@@ -352,7 +352,9 @@ public class InterfaceController implements Initializable {
 
 	/*
 	 * Sets up the context menu in the tracklist view that pops up when a user
-	 * right clicks on a track. The only option in the context menu is to add
+	 * right clicks on a track. 
+	 * 
+	 * The only option in the context menu is to add
 	 * the selected track to the current playlist.
 	 */
 	public void setTrackListView() {
@@ -378,22 +380,45 @@ public class InterfaceController implements Initializable {
 
 				if (e.getButton().equals(MouseButton.PRIMARY)) {
 
-					if (trackList.getSelectionModel().getSelectedItem() != null) {
-
-						if (currentMedia != null)
-							currentMedia.stop();
-
-						File file = trackList.getSelectionModel().getSelectedItem();
-
-						currentMedia = new MusicPlayer(file);
-						currentMedia.setVolume(getCurrentVoume());
-						setInfoLabels(file);
-						setProgressBar();
-						updateTimeLabel();
+					if (trackList.getSelectionModel().getSelectedItem().isDirectory()) {
+						handleTrackListDirectorySelection();
+					} else {
+						handleTrackListFileSelection();
 					}
 				}
 			}
 		});
+	}
+
+
+	private void handleTrackListFileSelection() {
+
+		if (trackList.getSelectionModel().getSelectedItem() != null) {
+
+			if (currentMedia != null)
+				currentMedia.stop();
+
+			File file = trackList.getSelectionModel().getSelectedItem();
+
+			currentMedia = new MusicPlayer(file);
+			currentMedia.setVolume(getCurrentVoume());
+			setInfoLabels(file);
+			setProgressBar();
+			updateTimeLabel();
+		}
+	}
+
+
+	private void handleTrackListDirectorySelection() {
+
+		if (trackList.getSelectionModel().getSelectedItem() != null) {
+			
+			File file = trackList.getSelectionModel().getSelectedItem();
+			
+			trackList.setItems(null);
+			trackList.setItems(MusicLibrary.populateTrackList(file));
+			albumArt.setImage(MusicLibrary.setAlbumArt(file));
+		}
 	}
 
 
