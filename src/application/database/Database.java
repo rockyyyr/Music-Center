@@ -35,8 +35,6 @@ public class Database {
 			conn = DriverManager.getConnection("jdbc:sqlite:" + MusicPlaylist.PLAYLIST_PATH + databaseName);
 			statement = conn.createStatement();
 
-//			System.out.println("Connected to Database");
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -49,10 +47,8 @@ public class Database {
 	private static void disconnectFromDatabase() {
 
 		try {
-//			statement.close();
-			conn.close();
 
-//			System.out.println("Disconnected from the database");
+			conn.close();
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -171,6 +167,12 @@ public class Database {
 	}
 
 
+	/**
+	 * Lists all the currently created playlists in the database. This list is
+	 * used to populate the playlist combo box
+	 * 
+	 * @return A string array containing all created playlists
+	 */
 	public static String[] listAllPlaylists() {
 
 		String[] results = null;
@@ -189,7 +191,7 @@ public class Database {
 
 			rs.close();
 			disconnectFromDatabase();
-			
+
 			System.out.println("Table list retrieved successfully");
 
 		} catch (Exception e) {
@@ -199,22 +201,28 @@ public class Database {
 	}
 
 
-	private static int getRSSize(String playlistName) {
+	/**
+	 * Returns the number of tracks in a playlist.
+	 * 
+	 * @param playlistName The name of the playlist.
+	 * @return The number of tracks in the specified playlist
+	 */
+	public static int getRSSize(String playlistName) {
 
 		int count = 0;
 
 		try {
 			connectToDatabase();
-			
+
 			String numOfRows = "SELECT COUNT(*) AS total FROM " + playlistName + ";";
 			ResultSet rs = statement.executeQuery(numOfRows);
-			
-			while(rs.next())
+
+			while (rs.next())
 				count = rs.getInt("total");
-			
+
 			rs.close();
 			disconnectFromDatabase();
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

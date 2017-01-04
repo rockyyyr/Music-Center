@@ -182,6 +182,14 @@ public class MusicLibrary {
 	}
 
 
+	/**
+	 * Sets the right click context menu for the tracklist list view. When the
+	 * user right clicks on a track an option to add a track to the current
+	 * playlist is presented
+	 * 
+	 * @param list The listview where the context menu will be set
+	 * @param playlist The playlist where the selected track will be added
+	 */
 	public static void setContextMenu(ListView<File> list, ListView<File> playlist) {
 
 		MenuItem addPlaylist = new MenuItem();
@@ -197,7 +205,7 @@ public class MusicLibrary {
 			}
 
 		});
-		
+
 		list.setContextMenu(new ContextMenu(addPlaylist));
 	}
 
@@ -231,8 +239,7 @@ public class MusicLibrary {
 
 
 	/**
-	 * Checks to see if this parameter file is a jpeg. The file is checked using
-	 * it's file path
+	 * Checks to see if this parameter file is a jpeg.
 	 * 
 	 * @param filePath The file path to be checked.
 	 * @return True if and only if the file is a jpeg

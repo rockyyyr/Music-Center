@@ -69,8 +69,8 @@ public class MusicPlaylist {
 	 * current playlist is retrieved.
 	 */
 	public static void saveCurrentPlaylistSelection() {
-		
-		if(currentPlaylist == null)
+
+		if (currentPlaylist == null)
 			return;
 
 		File libraryDirectory = new File(PLAYLIST_DIR);
@@ -129,6 +129,12 @@ public class MusicPlaylist {
 	}
 
 
+	/**
+	 * Removes the specified track from the current playlist. This feature is
+	 * access through the right click context menu
+	 * 
+	 * @param file The track to be removed
+	 */
 	public static void removeTrackFromPlaylist(File file) {
 		if (file != null) {
 			Database.deleteFromPlaylist(currentPlaylist, file.getPath());
@@ -146,9 +152,9 @@ public class MusicPlaylist {
 
 		ObservableList<String> playlists = FXCollections.observableArrayList();
 		String[] tables = Database.listAllPlaylists();
-		
-		if(tables.length > 0){
-			for(String playlist : tables)
+
+		if (tables.length > 0) {
+			for (String playlist : tables)
 				playlists.add(playlist);
 		}
 		return playlists;
@@ -228,6 +234,13 @@ public class MusicPlaylist {
 	}
 
 
+	/**
+	 * Sets up the right click context menu for the playlist list view. When the
+	 * user right clicks on a track, the option to remove the track from the
+	 * playlist is presented
+	 * 
+	 * @param playlist The listview where this context menu will be set
+	 */
 	public static void setContextMenu(ListView<File> playlist) {
 
 		MenuItem addPlaylist = new MenuItem();

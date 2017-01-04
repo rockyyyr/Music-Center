@@ -100,16 +100,18 @@ public class InterfaceController implements Initializable {
 
 	/*
 	 * Initializes the music library if a music library has been previously
-	 * selected. The library being used when the application was last shutdown
-	 * will be automatically saved and retrieved on the next start up. If no
-	 * library has been previously selected, no library is retrieved.
+	 * selected.
+	 * 
+	 * The library being used when the application was last shutdown will be
+	 * automatically saved and retrieved on the next start up. If no library has
+	 * been previously selected, no library is retrieved.
 	 */
 	private void initializeLibrary() {
 
 		String directoryPath = MusicLibrary.retrieveLibraryDirectory();
-		
+
 		if (directoryPath != null && directoryPath.length() > 0) {
-			
+
 			File directory = new File(directoryPath);
 
 			if (directory != null) {
@@ -122,6 +124,7 @@ public class InterfaceController implements Initializable {
 
 	/*
 	 * Initializes the music playlist if a playlist has been previously created.
+	 * 
 	 * The playlist being used when the application was last shut down will be
 	 * automatically saved and retrieved on the next start up. If no playlist
 	 * was previously created, no playlist will be retrieved
@@ -266,8 +269,10 @@ public class InterfaceController implements Initializable {
 
 	/*
 	 * When Add library is clicked a dialog window opens asking for the music
-	 * library directory. When a directory is selected it is used to populate
-	 * the artist list view and its files names are set.
+	 * library directory.
+	 * 
+	 * When a directory is selected it is used to populate the artist list view
+	 * and its files names are set.
 	 */
 	private void setAddLibraryButton() {
 		addLibraryButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -302,9 +307,10 @@ public class InterfaceController implements Initializable {
 
 	/*
 	 * Populates the playlist selection menu, sets the menu items to display
-	 * their file names. When a menu item is selected the playlist view gets
-	 * cleared then re-populated and the playlist track names are set to
-	 * "artist - track".
+	 * their file names.
+	 * 
+	 * When a menu item is selected the playlist view gets cleared then
+	 * re-populated and the playlist track names are set to "artist - track".
 	 */
 	private void setPlaylists() {
 		setPlaylistItemAction();
@@ -321,7 +327,6 @@ public class InterfaceController implements Initializable {
 				playlistView.setItems(MusicPlaylist.populatePlaylistView());
 				MusicLibrary.setFileNames(playlistView, true);
 			}
-
 		});
 	}
 
@@ -357,10 +362,11 @@ public class InterfaceController implements Initializable {
 
 
 	/*
-	 * Sets the action for when an track is selected in the track list view. <p>
+	 * Sets the action for when an track is selected in the track list view.
+	 * 
 	 * If a track is left clicked, the selected track is set as
 	 * MusicPlayer.currentMedia which is then used to control play, pause and
-	 * other things related to that single track. <p> Each time a new track is
+	 * other things related to that single track. Each time a new track is
 	 * selected it gets set to this.currentMedia.
 	 */
 	private void setTrackListItemAction() {
@@ -392,7 +398,8 @@ public class InterfaceController implements Initializable {
 
 
 	/*
-	 * Sets the action for when a track is selected in the playlist view. <p>
+	 * Sets the action for when a track is selected in the playlist view.
+	 * 
 	 * When a playlist track has been left clicked it is set to
 	 * MusicPlayer.currentMedia which is used to control play, pause, volume,
 	 * time remaining and other things related to this track. This current
@@ -424,7 +431,6 @@ public class InterfaceController implements Initializable {
 					}
 				}
 			}
-
 		});
 	}
 
