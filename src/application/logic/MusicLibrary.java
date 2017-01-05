@@ -1,15 +1,11 @@
 package application.logic;
 
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.net.MalformedURLException;
-import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.apache.commons.io.FilenameUtils;
 
+import application.database.Database;
 import application.utils.MetaDataParser;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -46,23 +42,7 @@ public class MusicLibrary {
 	 *         library hasn't been set
 	 */
 	public static String retrieveLibraryDirectory() {
-
-		String directory = "";
-		List<String> lines = new ArrayList<>();
-		File libraryDirectory = new File(LIBRARY_DIRECTORY);
-
-		try {
-			lines = Files.readAllLines(libraryDirectory.toPath());
-		} catch (IOException e) {
-			System.out.println("ERROR: Unable to read file.");
-			e.printStackTrace();
-		}
-
-		if (lines != null && lines.isEmpty() == false) {
-			directory = lines.get(0);
-		}
-
-		return directory;
+		return Database.retrieveLibraryDirectory();
 	}
 
 
@@ -73,16 +53,8 @@ public class MusicLibrary {
 	 */
 	public static void storeLibraryDirectory(String directoryPath) {
 
-		File libraryDirectory = new File(LIBRARY_DIRECTORY);
-
-		try {
-			FileWriter writer = new FileWriter(libraryDirectory, false);
-			writer.write(directoryPath);
-			writer.close();
-		} catch (IOException e) {
-			System.out.println("ERROR: Unable to write to file.");
-			e.printStackTrace();
-		}
+		if (directoryPath != null && directoryPath.trim().length() > 0)
+			Database.saveLibraryDirectory(directoryPath);
 	}
 
 

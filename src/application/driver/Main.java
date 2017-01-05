@@ -3,6 +3,7 @@ package application.driver;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import application.database.Database;
 import application.logic.MusicPlaylist;
 import javafx.application.Application;
 import javafx.event.EventHandler;
@@ -30,6 +31,9 @@ public class Main extends Application {
 		} catch (Exception e) {
 			Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, e);
 		}
+		
+		Database.createDirectoryTable();
+		Database.displayDirectories();
 		
 		primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>(){
 

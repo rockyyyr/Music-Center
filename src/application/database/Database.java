@@ -17,8 +17,10 @@ import application.logic.MusicPlaylist;
 public class Database {
 
 
-	private static final String databaseName = "playlists.db";
-	private static final String fileNameCol = "FilePath";
+	private static final String PLAYLIST_DATABASE = "playlists.db";
+	private static final String DIRECTORY_DATABASE = "directories.db";
+	private static final String PLAYLIST_FILE_COL = "FilePath";
+	private static final String DIRECTORY_TABLE_NAME = "directories";
 
 	private static Connection conn;
 	private static Statement statement;
@@ -28,11 +30,28 @@ public class Database {
 	 * Opens a connection to the playlist database. This connection must be
 	 * closed after use.
 	 */
-	private static void connectToDatabase() {
+	private static void connectToPlaylistDatabase() {
 
 		try {
 			Class.forName("org.sqlite.JDBC");
-			conn = DriverManager.getConnection("jdbc:sqlite:" + MusicPlaylist.PLAYLIST_PATH + databaseName);
+			conn = DriverManager.getConnection("jdbc:sqlite:" + MusicPlaylist.PLAYLIST_PATH + PLAYLIST_DATABASE);
+			statement = conn.createStatement();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+
+	/*
+	 * Opens a connection to the directory database. This connection must be
+	 * closed after use.
+	 */
+	private static void connectToDirectoryDatabase() {
+
+		try {
+			Class.forName("org.sqlite.JDBC");
+			conn = DriverManager.getConnection("jdbc:sqlite:" + MusicPlaylist.PLAYLIST_PATH + DIRECTORY_DATABASE);
 			statement = conn.createStatement();
 
 		} catch (Exception e) {
@@ -64,9 +83,9 @@ public class Database {
 	public static void createPlaylist(String playlistName) {
 
 		try {
-			connectToDatabase();
+			connectToPlaylistDatabase();
 
-			String createTable = "CREATE TABLE " + playlistName + " (" + fileNameCol + " TEXT)";
+			String createTable = "CREATE TABLE " + playlistName + " (" + PLAYLIST_FILE_COL + " TEXT);";
 			statement.executeUpdate(createTable);
 
 			statement.close();
@@ -75,6 +94,132 @@ public class Database {
 			System.out.println("Table created successfully");
 
 		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+
+	/**
+	 * Creates a new table for storing playlist and library directories if one
+	 * does not already exist.
+	 * 
+	 * Also initializes the table for storage of both directories if not yet
+	 * initialized
+	 */
+	public static void createDirectoryTable() {
+
+		try {
+			connectToDirectoryDatabase();
+
+			String createTable = "CREATE TABLE IF NOT EXISTS " + DIRECTORY_TABLE_NAME
+					+ " (row INT, playlist TEXT, library TEXT);";
+			statement.executeUpdate(createTable);
+
+			String initialize = "INSERT INTO  " + DIRECTORY_TABLE_NAME + " (row, playlist, library) " +
+					"SELECT 1, ' ', ' ' " +
+					"WHERE NOT EXISTS (SELECT * FROM " + DIRECTORY_TABLE_NAME + " WHERE row=1);";
+			statement.executeUpdate(initialize);
+
+			statement.close();
+			disconnectFromDatabase();
+
+			System.out.println("Directory table created successfully");
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+
+	/**
+	 * 
+	 * @param directoryPath
+	 */
+	public static void savePlaylistDirectory(String directoryPath) {
+		saveDirectory("playlist", directoryPath);
+	}
+
+
+	public static void saveLibraryDirectory(String directoryPath) {
+		saveDirectory("library", directoryPath);
+	}
+
+
+	private static void saveDirectory(String directory, String directoryPath) {
+
+		try {
+			connectToDirectoryDatabase();
+
+			String dirPath = "UPDATE " + DIRECTORY_TABLE_NAME + " SET " + directory + "='" + directoryPath
+					+ "' WHERE row=1;";
+			statement.executeUpdate(dirPath);
+
+			statement.close();
+			disconnectFromDatabase();
+
+			System.out.println(directory + " directory saved");
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+
+	public static String retrievePlaylistDirectory() {
+		return retrieveDirectory("playlist");
+	}
+
+
+	public static String retrieveLibraryDirectory() {
+		return retrieveDirectory("library");
+	}
+
+
+	private static String retrieveDirectory(String directory) {
+
+		String result = "";
+
+		try {
+			connectToDirectoryDatabase();
+
+			String sql = "SELECT " + directory + " FROM " + DIRECTORY_TABLE_NAME + ";";
+			ResultSet rs = statement.executeQuery(sql);
+
+			while (rs.next()) {
+				result = rs.getString(directory);
+			}
+
+			rs.close();
+			disconnectFromDatabase();
+
+			System.out.println(directory + " retrieved successfully");
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return result;
+	}
+
+
+	public static void displayDirectories() {
+		try {
+			connectToDirectoryDatabase();
+
+			String sql = "SELECT * FROM directories";
+			ResultSet rs = statement.executeQuery(sql);
+
+			while (rs.next()) {
+				System.out.println("row: " + rs.getInt("row"));
+				System.out.println("playlist: " + rs.getString("playlist"));
+				System.out.println("library: " + rs.getString("library"));
+				System.out.println();
+			}
+
+			rs.close();
+			disconnectFromDatabase();
+
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
@@ -90,9 +235,10 @@ public class Database {
 	public static void addToPlaylist(String playlistName, String filePath) {
 
 		try {
-			connectToDatabase();
+			connectToPlaylistDatabase();
 
-			String addition = "INSERT INTO " + playlistName + " (" + fileNameCol + ") VALUES ('" + filePath + "');";
+			String addition = "INSERT INTO " + playlistName + " (" + PLAYLIST_FILE_COL + ") VALUES ('" + filePath
+					+ "');";
 			statement.executeUpdate(addition);
 
 			statement.close();
@@ -117,7 +263,7 @@ public class Database {
 		String[] results = null;
 
 		try {
-			connectToDatabase();
+			connectToPlaylistDatabase();
 
 			String retrieve = "SELECT * FROM " + playlistName;
 			ResultSet rs = statement.executeQuery(retrieve);
@@ -127,7 +273,7 @@ public class Database {
 			int index = 0;
 
 			while (rs.next())
-				results[index++] = rs.getString(fileNameCol);
+				results[index++] = rs.getString(PLAYLIST_FILE_COL);
 
 			rs.close();
 			disconnectFromDatabase();
@@ -151,9 +297,9 @@ public class Database {
 	public static void deleteFromPlaylist(String playlistName, String filePath) {
 
 		try {
-			connectToDatabase();
+			connectToPlaylistDatabase();
 
-			String remove = "DELETE FROM " + playlistName + " where " + fileNameCol + "='" + filePath + "';";
+			String remove = "DELETE FROM " + playlistName + " where " + PLAYLIST_FILE_COL + "='" + filePath + "';";
 			statement.executeUpdate(remove);
 
 			statement.close();
@@ -178,7 +324,7 @@ public class Database {
 		String[] results = null;
 
 		try {
-			connectToDatabase();
+			connectToPlaylistDatabase();
 
 			String tables = "SELECT name FROM sqlite_master WHERE type='table'";
 			ResultSet rs = statement.executeQuery(tables);
@@ -212,7 +358,7 @@ public class Database {
 		int count = 0;
 
 		try {
-			connectToDatabase();
+			connectToPlaylistDatabase();
 
 			String numOfRows = "SELECT COUNT(*) AS total FROM " + playlistName + ";";
 			ResultSet rs = statement.executeQuery(numOfRows);

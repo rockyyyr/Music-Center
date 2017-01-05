@@ -1,11 +1,6 @@
 package application.logic;
 
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import application.database.Database;
@@ -30,7 +25,7 @@ public class MusicPlaylist {
 
 
 	public static final String PLAYLIST_EXT = ".ply";
-	public static final String PLAYLIST_PATH = "src/application/database/playlists/";
+	public static final String PLAYLIST_PATH = "src/application/database/";
 	public static final String PLAYLIST_DIR = "src/application/database/PlaylistDirectory.lib";
 
 	/*
@@ -48,23 +43,7 @@ public class MusicPlaylist {
 	 * @return The last used playlist path as a string
 	 */
 	public static String retrieveCurrentPlaylist() {
-
-		String directory = null;
-		List<String> lines = new ArrayList<>();
-		File playlistDirectory = new File(PLAYLIST_DIR);
-
-		try {
-			lines = Files.readAllLines(playlistDirectory.toPath());
-		} catch (IOException e) {
-			System.out.println("ERROR: Unable to read file.");
-			e.printStackTrace();
-		}
-
-		if (lines != null && lines.isEmpty() == false) {
-			directory = lines.get(0);
-		}
-
-		return directory;
+		return Database.retrievePlaylistDirectory();
 	}
 
 
@@ -75,19 +54,8 @@ public class MusicPlaylist {
 	 */
 	public static void saveCurrentPlaylistSelection() {
 
-		if (currentPlaylist == null)
-			return;
-
-		File libraryDirectory = new File(PLAYLIST_DIR);
-
-		try {
-			FileWriter writer = new FileWriter(libraryDirectory, false);
-			writer.write(currentPlaylist);
-			writer.close();
-		} catch (IOException e) {
-			System.out.println("ERROR: Unable to write to file.");
-			e.printStackTrace();
-		}
+		if (currentPlaylist != null)
+			Database.savePlaylistDirectory(currentPlaylist);
 	}
 
 
@@ -264,7 +232,6 @@ public class MusicPlaylist {
 				playlist.setItems(null);
 				playlist.setItems(populatePlaylistView());
 			}
-
 		});
 
 		playlist.setContextMenu(new ContextMenu(addPlaylist));
