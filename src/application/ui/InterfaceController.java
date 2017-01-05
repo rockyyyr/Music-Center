@@ -110,7 +110,7 @@ public class InterfaceController implements Initializable {
 
 		String directoryPath = MusicLibrary.retrieveLibraryDirectory();
 
-		if (directoryPath != null && directoryPath.length() > 0) {
+		if (directoryPath != null && directoryPath.trim().length() > 0) {
 
 			File directory = new File(directoryPath);
 
@@ -133,7 +133,7 @@ public class InterfaceController implements Initializable {
 		setPlaylists();
 		String playlist = MusicPlaylist.retrieveCurrentPlaylist();
 
-		if (playlist != null) {
+		if (playlist != null && playlist.trim().length() > 0) {
 			MusicPlaylist.setCurrentPlaylist(playlist);
 			playlists.getSelectionModel().select(playlist);
 			playlistView.setItems(MusicPlaylist.populatePlaylistView());
@@ -352,10 +352,10 @@ public class InterfaceController implements Initializable {
 
 	/*
 	 * Sets up the context menu in the tracklist view that pops up when a user
-	 * right clicks on a track. 
+	 * right clicks on a track.
 	 * 
-	 * The only option in the context menu is to add
-	 * the selected track to the current playlist.
+	 * The only option in the context menu is to add the selected track to the
+	 * current playlist.
 	 */
 	public void setTrackListView() {
 		setTrackListItemAction();
@@ -380,10 +380,13 @@ public class InterfaceController implements Initializable {
 
 				if (e.getButton().equals(MouseButton.PRIMARY)) {
 
-					if (trackList.getSelectionModel().getSelectedItem().isDirectory()) {
-						handleTrackListDirectorySelection();
-					} else {
-						handleTrackListFileSelection();
+					if (trackList.getSelectionModel().getSelectedItem() != null) {
+
+						if (trackList.getSelectionModel().getSelectedItem().isDirectory()) {
+							handleTrackListDirectorySelection();
+						} else {
+							handleTrackListFileSelection();
+						}
 					}
 				}
 			}
@@ -412,9 +415,9 @@ public class InterfaceController implements Initializable {
 	private void handleTrackListDirectorySelection() {
 
 		if (trackList.getSelectionModel().getSelectedItem() != null) {
-			
+
 			File file = trackList.getSelectionModel().getSelectedItem();
-			
+
 			trackList.setItems(null);
 			trackList.setItems(MusicLibrary.populateTrackList(file));
 			albumArt.setImage(MusicLibrary.setAlbumArt(file));
