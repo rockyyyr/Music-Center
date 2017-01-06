@@ -15,15 +15,18 @@ import javafx.stage.WindowEvent;
 
 /**
  * Main. Driver Class
+ * 
  * @author Rocky Robson
  * @version Dec 13, 2016
  */
 public class Main extends Application {
-	
+
+
 	@Override
 	public void start(Stage primaryStage) {
 		try {
-			AnchorPane headAnchor = (AnchorPane) FXMLLoader.load(getClass().getResource("/application/ui/UserInterface.fxml"));
+			AnchorPane headAnchor = (AnchorPane) FXMLLoader
+					.load(getClass().getResource("/application/ui/UserInterface.fxml"));
 			Scene scene = new Scene(headAnchor);
 			primaryStage.setScene(scene);
 			primaryStage.setTitle("Music Center");
@@ -31,18 +34,19 @@ public class Main extends Application {
 		} catch (Exception e) {
 			Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, e);
 		}
-		
+
 		Database.createDirectoryTable();
 		Database.displayDirectories();
-		
-		primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>(){
+
+		primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+
 
 			@Override
 			public void handle(WindowEvent event) {
 				MusicPlaylist.saveCurrentPlaylistSelection();
 				System.out.println("Exiting...");
 			}
-			
+
 		});
 	}
 

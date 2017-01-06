@@ -82,10 +82,13 @@ public class Database {
 	 */
 	public static void createPlaylist(String playlistName) {
 
+		String formattedPlaylistName = handleSpaces(playlistName);
+		System.out.println(formattedPlaylistName);
+
 		try {
 			connectToPlaylistDatabase();
 
-			String createTable = "CREATE TABLE " + playlistName + " (" + PLAYLIST_FILE_COL + " TEXT);";
+			String createTable = "CREATE TABLE " + formattedPlaylistName + " (" + PLAYLIST_FILE_COL + " TEXT);";
 			statement.executeUpdate(createTable);
 
 			statement.close();
@@ -108,10 +111,13 @@ public class Database {
 	 */
 	public static void addToPlaylist(String playlistName, String filePath) {
 
+		String formattedPlaylistName = handleSpaces(playlistName);
+
 		try {
 			connectToPlaylistDatabase();
 
-			String addition = "INSERT INTO " + playlistName + " (" + PLAYLIST_FILE_COL + ") VALUES ('" + filePath
+			String addition = "INSERT INTO " + formattedPlaylistName + " (" + PLAYLIST_FILE_COL + ") VALUES ('"
+					+ filePath
 					+ "');";
 			statement.executeUpdate(addition);
 
@@ -134,15 +140,16 @@ public class Database {
 	 */
 	public static String[] retrievePlaylist(String playlistName) {
 
+		String formattedPlaylistName = handleSpaces(playlistName);
 		String[] results = null;
 
 		try {
 			connectToPlaylistDatabase();
 
-			String retrieve = "SELECT * FROM " + playlistName;
+			String retrieve = "SELECT * FROM " + formattedPlaylistName;
 			ResultSet rs = statement.executeQuery(retrieve);
 
-			results = new String[getRSSize(playlistName)];
+			results = new String[getRSSize(formattedPlaylistName)];
 
 			int index = 0;
 
@@ -170,10 +177,13 @@ public class Database {
 	 */
 	public static void deleteFromPlaylist(String playlistName, String filePath) {
 
+		String formattedPlaylistName = handleSpaces(playlistName);
+
 		try {
 			connectToPlaylistDatabase();
 
-			String remove = "DELETE FROM " + playlistName + " where " + PLAYLIST_FILE_COL + "='" + filePath + "';";
+			String remove = "DELETE FROM " + formattedPlaylistName + " where " + PLAYLIST_FILE_COL + "='" + filePath
+					+ "';";
 			statement.executeUpdate(remove);
 
 			statement.close();
@@ -207,7 +217,7 @@ public class Database {
 			int index = 0;
 
 			while (rs.next())
-				results[index++] = rs.getString("name");
+				results[index++] = handleSpaces(rs.getString("name"));
 
 			rs.close();
 			disconnectFromDatabase();
@@ -405,5 +415,28 @@ public class Database {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+
+
+	/**
+	 * Replaces a space in a string with an underscore and vica versa.
+	 * 
+	 * @param string The string to be altered
+	 * @return A string with spaces replaced with underscores or a string with
+	 *         underscores replaced with spaces
+	 */
+	private static String handleSpaces(String string) {
+
+		String underscore = "_";
+		String space = " ";
+
+		String altered = string.trim();
+
+		if (altered.contains(underscore)) {
+			altered = altered.replace(underscore, space);
+		} else if (altered.contains(space)) {
+			altered = altered.replace(space, underscore);
+		}
+		return altered;
 	}
 }
