@@ -419,7 +419,8 @@ public class Database {
 
 
 	/**
-	 * Replaces a space in a string with an underscore or an underscore in a string with a space
+	 * Replaces a space in a string with an underscore or an underscore in a
+	 * string with a space
 	 * 
 	 * @param string The string to be altered
 	 * @return A string with spaces replaced with underscores or a string with

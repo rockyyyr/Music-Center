@@ -30,6 +30,7 @@ public class Main extends Application {
 			Scene scene = new Scene(headAnchor);
 			primaryStage.setScene(scene);
 			primaryStage.setTitle("Music Center");
+			primaryStage.setResizable(false);
 			primaryStage.show();
 		} catch (Exception e) {
 			Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, e);
