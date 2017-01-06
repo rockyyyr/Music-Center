@@ -40,6 +40,7 @@ public class Main extends Application {
 			@Override
 			public void handle(WindowEvent event) {
 				MusicPlaylist.saveCurrentPlaylistSelection();
+				System.out.println("Exiting...");
 			}
 			
 		});

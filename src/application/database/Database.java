@@ -100,132 +100,6 @@ public class Database {
 
 
 	/**
-	 * Creates a new table for storing playlist and library directories if one
-	 * does not already exist.
-	 * 
-	 * Also initializes the table for storage of both directories if not yet
-	 * initialized
-	 */
-	public static void createDirectoryTable() {
-
-		try {
-			connectToDirectoryDatabase();
-
-			String createTable = "CREATE TABLE IF NOT EXISTS " + DIRECTORY_TABLE_NAME
-					+ " (row INT, playlist TEXT, library TEXT);";
-			statement.executeUpdate(createTable);
-
-			String initialize = "INSERT INTO  " + DIRECTORY_TABLE_NAME + " (row, playlist, library) " +
-					"SELECT 1, ' ', ' ' " +
-					"WHERE NOT EXISTS (SELECT * FROM " + DIRECTORY_TABLE_NAME + " WHERE row=1);";
-			statement.executeUpdate(initialize);
-
-			statement.close();
-			disconnectFromDatabase();
-
-			System.out.println("Directory table created successfully");
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-
-	/**
-	 * 
-	 * @param directoryPath
-	 */
-	public static void savePlaylistDirectory(String directoryPath) {
-		saveDirectory("playlist", directoryPath);
-	}
-
-
-	public static void saveLibraryDirectory(String directoryPath) {
-		saveDirectory("library", directoryPath);
-	}
-
-
-	private static void saveDirectory(String directory, String directoryPath) {
-
-		try {
-			connectToDirectoryDatabase();
-
-			String dirPath = "UPDATE " + DIRECTORY_TABLE_NAME + " SET " + directory + "='" + directoryPath
-					+ "' WHERE row=1;";
-			statement.executeUpdate(dirPath);
-
-			statement.close();
-			disconnectFromDatabase();
-
-			System.out.println(directory + " directory saved");
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-
-	public static String retrievePlaylistDirectory() {
-		return retrieveDirectory("playlist");
-	}
-
-
-	public static String retrieveLibraryDirectory() {
-		return retrieveDirectory("library");
-	}
-
-
-	private static String retrieveDirectory(String directory) {
-
-		String result = "";
-
-		try {
-			connectToDirectoryDatabase();
-
-			String sql = "SELECT " + directory + " FROM " + DIRECTORY_TABLE_NAME + ";";
-			ResultSet rs = statement.executeQuery(sql);
-
-			while (rs.next()) {
-				result = rs.getString(directory);
-			}
-
-			rs.close();
-			disconnectFromDatabase();
-
-			System.out.println(directory + " retrieved successfully");
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return result;
-	}
-
-
-	public static void displayDirectories() {
-		try {
-			connectToDirectoryDatabase();
-
-			String sql = "SELECT * FROM directories";
-			ResultSet rs = statement.executeQuery(sql);
-
-			while (rs.next()) {
-				System.out.println("row: " + rs.getInt("row"));
-				System.out.println("playlist: " + rs.getString("playlist"));
-				System.out.println("library: " + rs.getString("library"));
-				System.out.println();
-			}
-
-			rs.close();
-			disconnectFromDatabase();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-
-
-	/**
 	 * Adds a track's file path to the specified playlist.
 	 * 
 	 * @param playlistName The name of the playlist where the track is to be
@@ -278,7 +152,7 @@ public class Database {
 			rs.close();
 			disconnectFromDatabase();
 
-			System.out.println(playlistName + " Playlist Retrieved");
+			System.out.println(playlistName + " playlist Retrieved");
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -338,7 +212,7 @@ public class Database {
 			rs.close();
 			disconnectFromDatabase();
 
-			System.out.println("Table list retrieved successfully");
+			System.out.println("List of playlists retrieved successfully");
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -373,5 +247,163 @@ public class Database {
 			e.printStackTrace();
 		}
 		return count;
+	}
+
+
+	/**
+	 * Creates a new table for storing playlist and library directories if one
+	 * does not already exist.
+	 * 
+	 * Also initializes the table for storage of both directories if not yet
+	 * initialized
+	 */
+	public static void createDirectoryTable() {
+
+		try {
+			connectToDirectoryDatabase();
+
+			String createTable = "CREATE TABLE IF NOT EXISTS " + DIRECTORY_TABLE_NAME
+					+ " (row INT, playlist TEXT, library TEXT);";
+			statement.executeUpdate(createTable);
+
+			String initialize = "INSERT INTO  " + DIRECTORY_TABLE_NAME + " (row, playlist, library) " +
+					"SELECT 1, ' ', ' ' " +
+					"WHERE NOT EXISTS (SELECT * FROM " + DIRECTORY_TABLE_NAME + " WHERE row=1);";
+			statement.executeUpdate(initialize);
+
+			statement.close();
+			disconnectFromDatabase();
+
+			System.out.println("Directory table created successfully");
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+
+	/**
+	 * Saves the playlist directory path to the database
+	 * 
+	 * @param directoryPath The playlist directory path
+	 */
+	public static void savePlaylistDirectory(String directoryPath) {
+		saveDirectory("playlist", directoryPath);
+	}
+
+
+	/**
+	 * Saves the library directory path to the database
+	 * 
+	 * @param directoryPath The library directory path
+	 */
+	public static void saveLibraryDirectory(String directoryPath) {
+		saveDirectory("library", directoryPath);
+	}
+
+
+	/**
+	 * Saves the specified directory to the database. Specified directory can be
+	 * either 'playlist' or 'library'
+	 * 
+	 * @param directory The directory to save. Either 'playlist' or 'library'
+	 * @param directoryPath The path to the specified directory
+	 */
+	private static void saveDirectory(String directory, String directoryPath) {
+
+		try {
+			connectToDirectoryDatabase();
+
+			String dirPath = "UPDATE " + DIRECTORY_TABLE_NAME + " SET " + directory + "='" + directoryPath
+					+ "' WHERE row=1;";
+			statement.executeUpdate(dirPath);
+
+			statement.close();
+			disconnectFromDatabase();
+
+			System.out.println(directory + " directory saved");
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+
+	/**
+	 * Retrieves the saved directory for the last used playlist
+	 * 
+	 * @return The name of the current playlist
+	 */
+	public static String retrievePlaylistDirectory() {
+		return retrieveDirectory("playlist");
+	}
+
+
+	/**
+	 * Retrieves the saved directory for the last used library
+	 * 
+	 * @return The directory of the last used library
+	 */
+	public static String retrieveLibraryDirectory() {
+		return retrieveDirectory("library");
+	}
+
+
+	/**
+	 * Retrieves the specified directory from the database. Specified directory
+	 * can be either 'playlist' or 'library'
+	 * 
+	 * @param directory The specified directory. Either 'playlist' or 'library'
+	 * @return The path to the specified directory
+	 */
+	private static String retrieveDirectory(String directory) {
+
+		String result = "";
+
+		try {
+			connectToDirectoryDatabase();
+
+			String sql = "SELECT " + directory + " FROM " + DIRECTORY_TABLE_NAME + ";";
+			ResultSet rs = statement.executeQuery(sql);
+
+			while (rs.next()) {
+				result = rs.getString(directory);
+			}
+
+			rs.close();
+			disconnectFromDatabase();
+
+			System.out.println(directory + " directoy retrieved successfully");
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return result;
+	}
+
+
+	/**
+	 * Displays the current playlist and library directories to the console
+	 */
+	public static void displayDirectories() {
+
+		try {
+			connectToDirectoryDatabase();
+
+			String sql = "SELECT * FROM directories";
+			ResultSet rs = statement.executeQuery(sql);
+
+			while (rs.next()) {
+				System.out.println("playlist: " + rs.getString("playlist"));
+				System.out.println("library: " + rs.getString("library"));
+			}
+
+			rs.close();
+			disconnectFromDatabase();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 }
