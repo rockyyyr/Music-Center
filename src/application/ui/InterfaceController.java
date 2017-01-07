@@ -176,6 +176,9 @@ public class InterfaceController implements Initializable {
 	}
 
 
+	/*
+	 * The back button selects the previous item in the tracklist and plays it
+	 */
 	private void setBackButton() {
 		backButton.setGraphic(new ImageView(new Image("images/Back.png")));
 
@@ -191,6 +194,9 @@ public class InterfaceController implements Initializable {
 	}
 
 
+	/*
+	 * The next button selects the next item in the tracklist and plays it
+	 */
 	private void setNextButton() {
 		nextButton.setGraphic(new ImageView(new Image("images/Next.png")));
 
@@ -485,6 +491,9 @@ public class InterfaceController implements Initializable {
 	}
 
 
+	/*
+	 * Handles selection from the tracklist if the selected item is a file
+	 */
 	private void handleTrackListFileSelection() {
 
 		if (trackList.getSelectionModel().getSelectedItem() != null) {
@@ -497,6 +506,9 @@ public class InterfaceController implements Initializable {
 	}
 
 
+	/*
+	 * Handles selection from the tracklist if the selected item is a directory
+	 */
 	private void handleTrackListDirectorySelection() {
 
 		if (trackList.getSelectionModel().getSelectedItem() != null) {
