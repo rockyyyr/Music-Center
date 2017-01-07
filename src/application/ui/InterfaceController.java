@@ -40,6 +40,12 @@ public class InterfaceController implements Initializable {
 	@FXML
 	private Button pauseButton;
 	@FXML
+	private Button backButton;
+	@FXML
+	private Button nextButton;
+	@FXML
+	private Button muteButton;
+	@FXML
 	private Button addLibraryButton;
 	@FXML
 	private Button addPlaylistButton;
@@ -71,6 +77,9 @@ public class InterfaceController implements Initializable {
 	 */
 	private MusicPlayer currentMedia;
 
+	private boolean mute;
+	private double currentVolume;
+
 
 	/**
 	 * Initializes the UserInterface components
@@ -90,6 +99,9 @@ public class InterfaceController implements Initializable {
 		setTimeLabel();
 		setPlayButton();
 		setPauseButton();
+		setBackButton();
+		setNextButton();
+		setMuteButton();
 		setAddLibraryButton();
 		setAddPlaylistButton();
 		setVolumeSlider();
@@ -143,23 +155,76 @@ public class InterfaceController implements Initializable {
 
 
 	private void setPlayButton() {
-		Image playButtonImage = new Image("images/Play.png");
-		playButton.setGraphic(new ImageView(playButtonImage));
-		playButton.setStyle("-fx-background-color: transparent");
+		playButton.setGraphic(new ImageView(new Image("images/Play.png")));
 
 		playButton.setOnAction((ActionEvent e) -> {
-			currentMedia.play();
+
+			if (currentMedia != null)
+				currentMedia.play();
 		});
 	}
 
 
 	private void setPauseButton() {
-		Image pauseButtonImage = new Image("images/Pause.png");
-		pauseButton.setGraphic(new ImageView(pauseButtonImage));
-		pauseButton.setStyle("-fx-background-color: transparent");
+		pauseButton.setGraphic(new ImageView(new Image("images/Pause.png")));
 
 		pauseButton.setOnAction((ActionEvent e) -> {
-			currentMedia.pause();
+
+			if (currentMedia != null)
+				currentMedia.pause();
+		});
+	}
+
+
+	private void setBackButton() {
+		backButton.setGraphic(new ImageView(new Image("images/Back.png")));
+
+		backButton.setOnAction((ActionEvent e) -> {
+
+			if (currentMedia != null) {
+				currentMedia.stop();
+				trackList.getSelectionModel().selectPrevious();
+				playSelectedTrack(trackList.getSelectionModel().getSelectedItem());
+			}
+
+		});
+	}
+
+
+	private void setNextButton() {
+		nextButton.setGraphic(new ImageView(new Image("images/Next.png")));
+
+		nextButton.setOnAction((ActionEvent e) -> {
+
+			if (currentMedia != null) {
+				currentMedia.stop();
+				trackList.getSelectionModel().selectNext();
+				playSelectedTrack(trackList.getSelectionModel().getSelectedItem());
+			}
+
+		});
+	}
+
+
+	/*
+	 * Sets up the mute button icon. A boolean is used to determine which mute
+	 * icon to use.
+	 */
+	private void setMuteButton() {
+		muteButton.setGraphic(new ImageView(new Image("images/MuteOff.png")));
+
+		muteButton.setOnAction((ActionEvent e) -> {
+
+			if (!mute) {
+				mute();
+				muteButton.setGraphic(new ImageView(new Image("images/MuteOn.png")));
+			} else if (mute) {
+				unmute();
+				muteButton.setGraphic(new ImageView(new Image("images/MuteOff.png")));
+			}
+
+			mute = !mute;
+
 		});
 	}
 
@@ -169,7 +234,7 @@ public class InterfaceController implements Initializable {
 	 */
 	private void setVolumeSlider() {
 		volumeSlider.setMax(1);
-		volumeSlider.setValue(0.05);
+		volumeSlider.setValue(0.2);
 
 		volumeSlider.valueProperty().addListener(new ChangeListener<Number>() {
 
@@ -190,6 +255,32 @@ public class InterfaceController implements Initializable {
 	 */
 	private double getCurrentVoume() {
 		return volumeSlider.getValue();
+	}
+
+
+	/*
+	 * Sets the volume for the volume slider. Must be between 0 and 1
+	 */
+	private void setVolume(double volume) {
+		if (volume >= 0 && volume <= 1)
+			volumeSlider.setValue(volume);
+	}
+
+
+	/*
+	 * Saves the current volume and sets the volume slider to 0
+	 */
+	private void mute() {
+		currentVolume = volumeSlider.getValue();
+		setVolume(0);
+	}
+
+
+	/*
+	 * Sets the volume slider to the previously saved current volume
+	 */
+	private void unmute() {
+		setVolume(currentVolume);
 	}
 
 
@@ -401,13 +492,7 @@ public class InterfaceController implements Initializable {
 			if (currentMedia != null)
 				currentMedia.stop();
 
-			File file = trackList.getSelectionModel().getSelectedItem();
-
-			currentMedia = new MusicPlayer(file);
-			currentMedia.setVolume(getCurrentVoume());
-			setInfoLabels(file);
-			setProgressBar();
-			updateTimeLabel();
+			playSelectedTrack(trackList.getSelectionModel().getSelectedItem());
 		}
 	}
 
@@ -449,17 +534,30 @@ public class InterfaceController implements Initializable {
 
 						File file = playlistView.getSelectionModel().getSelectedItem();
 
-						currentMedia = new MusicPlayer(file);
-						currentMedia.setVolume(getCurrentVoume());
+						playSelectedTrack(file);
 						albumArt.setImage(MusicLibrary.setAlbumArt(file.getParentFile()));
 
-						setInfoLabels(file);
-						setProgressBar();
-						updateTimeLabel();
 					}
 				}
 			}
 		});
+	}
+
+
+	/*
+	 * Initializes the parameter file for playback and starts playing the track
+	 * if it is not null
+	 */
+	private void playSelectedTrack(File file) {
+
+		if (file != null) {
+			currentMedia = new MusicPlayer(file);
+			currentMedia.setVolume(getCurrentVoume());
+
+			setInfoLabels(file);
+			setProgressBar();
+			updateTimeLabel();
+		}
 	}
 
 }

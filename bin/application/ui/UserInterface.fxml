@@ -9,7 +9,6 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.Slider?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -82,7 +81,7 @@
       </AnchorPane>
       <AnchorPane AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <Pane prefHeight="50.0" prefWidth="1000.0" styleClass="blue-border">
+            <Pane prefHeight="50.0" prefWidth="1200.0" styleClass="blue-border">
                <children>
                   <HBox layoutX="14.0" layoutY="10.0">
                      <children>
@@ -98,11 +97,28 @@
                               <String fx:value="playbar-buttons" />
                            </styleClass>
                         </Button>
+                        <Button fx:id="backButton" contentDisplay="GRAPHIC_ONLY" layoutX="57.0" layoutY="10.0" mnemonicParsing="false" text="Pause">
+                           <styleClass>
+                              <String fx:value="buttons" />
+                              <String fx:value="playbar-buttons" />
+                           </styleClass>
+                        </Button>
+                        <Button fx:id="nextButton" contentDisplay="GRAPHIC_ONLY" layoutX="116.0" layoutY="10.0" mnemonicParsing="false" text="Pause">
+                           <styleClass>
+                              <String fx:value="buttons" />
+                              <String fx:value="playbar-buttons" />
+                           </styleClass>
+                        </Button>
                      </children>
                   </HBox>
                   <ProgressBar fx:id="progressBar" layoutX="381.0" layoutY="14.0" prefHeight="5.0" prefWidth="418.0" progress="0.0" />
-                  <Slider fx:id="volumeSlider" layoutX="133.0" layoutY="16.0" prefHeight="17.0" prefWidth="237.0" />
-                  <TextField layoutX="1051.0" layoutY="10.0" prefHeight="31.0" prefWidth="130.0" promptText="Search" visible="false" />
+                  <Button fx:id="muteButton" contentDisplay="GRAPHIC_ONLY" layoutX="924.0" layoutY="9.0" mnemonicParsing="false" text="Pause">
+                     <styleClass>
+                        <String fx:value="buttons" />
+                        <String fx:value="playbar-buttons" />
+                     </styleClass>
+                  </Button>
+                  <Slider fx:id="volumeSlider" layoutX="983.0" layoutY="16.0" prefHeight="17.0" prefWidth="187.0" />
                   <Label fx:id="timeLabel" layoutX="812.0" layoutY="14.0" prefHeight="23.0" prefWidth="130.0" textFill="WHITE">
                      <font>
                         <Font name="Microsoft Sans Serif" size="15.0" />
